@@ -1,0 +1,462 @@
+{
+  "V24_CHANGELOG.md": {
+    "before": null,
+    "after": "9e70fd4d21ecc177afed7cef7f7425d76fbf8c7a5737bd6b93cbc1f4ffe12993",
+    "mode": 420
+  },
+  "scripts/qs_manager.sh": {
+    "before": "f47ac9659cd4c6ffe26a05b25fe9296dffaff993e1585b40c05aa3d520634d6e",
+    "after": "253636a24357530f405101cc534fa186634808d0f57d0d8a4a3d78494316bf6b",
+    "mode": 493
+  },
+  "scripts/brightness.sh": {
+    "before": "c9a26d7df79239dd54170de5e9e1e97572fc5f209308da7f9461f1605e8ff6b1",
+    "after": "c9a26d7df79239dd54170de5e9e1e97572fc5f209308da7f9461f1605e8ff6b1",
+    "mode": 493
+  },
+  "scripts/v24_process_scope.py": {
+    "before": "921a1d69f7a1572a8de76a835d30742dca9a792becf45a0265790ce0db57f7c3",
+    "after": "921a1d69f7a1572a8de76a835d30742dca9a792becf45a0265790ce0db57f7c3",
+    "mode": 420
+  },
+  "scripts/config.sh": {
+    "before": "d94473e3cb27e7782a81d6c47c74a7459aac3121a4a67b6032e692b428c24296",
+    "after": "d1acee6a23df2fb78a737cd487571d3ae05b83716a58072366d17e2dc00df26e",
+    "mode": 493
+  },
+  "quickshell/qmldir": {
+    "before": "464f3869c033a7d6f8cbc4b1bbe5d1e3067ed4fef15ddacdb6c065385f89da3c",
+    "after": "c253c8fdf7bdb23d30df6ed45cfc666d47086159b41c53a9cada0405d10fd1e9",
+    "mode": 420
+  },
+  "quickshell/Main.qml": {
+    "before": "18e8af02b3d6df09c03e4d4a2f21e5e6859e76cd4fbe2a48b023eeadab59097c",
+    "after": "18e8af02b3d6df09c03e4d4a2f21e5e6859e76cd4fbe2a48b023eeadab59097c",
+    "mode": 420
+  },
+  "assets/languages/es.json": {
+    "before": "ee26042b1e38259a30187f072ff4c6ba9a84a9fb2002f35c41393de87a7a265c",
+    "after": "ee26042b1e38259a30187f072ff4c6ba9a84a9fb2002f35c41393de87a7a265c",
+    "mode": 420
+  },
+  "assets/languages/hy.json": {
+    "before": "bd438b61147a39fed8da5832a827c832f44a0e3f885ef5e732d0fa36437fe3bf",
+    "after": "bd438b61147a39fed8da5832a827c832f44a0e3f885ef5e732d0fa36437fe3bf",
+    "mode": 420
+  },
+  "assets/languages/de.json": {
+    "before": "9674596ff3c67bf64d1b520a792049b80e1e798b72649239d08759c5b1d8ba2b",
+    "after": "9674596ff3c67bf64d1b520a792049b80e1e798b72649239d08759c5b1d8ba2b",
+    "mode": 420
+  },
+  "assets/languages/en.json": {
+    "before": "77fcad46b2a27e0166e413bea0df7fa7a7964e162935eb3ad52b27293d54b43b",
+    "after": "77fcad46b2a27e0166e413bea0df7fa7a7964e162935eb3ad52b27293d54b43b",
+    "mode": 420
+  },
+  "assets/languages/ko.json": {
+    "before": "726f638b199c2072a6a95b51d8ae260d196b93b79aa1700be2ecd166a24a6ff1",
+    "after": "726f638b199c2072a6a95b51d8ae260d196b93b79aa1700be2ecd166a24a6ff1",
+    "mode": 420
+  },
+  "assets/languages/az.json": {
+    "before": "c643ec00368556bb05869b67ec8eee10c762db58852a8ad10a96b273f66305bd",
+    "after": "c643ec00368556bb05869b67ec8eee10c762db58852a8ad10a96b273f66305bd",
+    "mode": 420
+  },
+  "assets/languages/pt.json": {
+    "before": "865ef038c1cfad14e1811d5a4bf975914bf966bfcc2adbda05060c49b2354b5a",
+    "after": "865ef038c1cfad14e1811d5a4bf975914bf966bfcc2adbda05060c49b2354b5a",
+    "mode": 420
+  },
+  "assets/languages/ru.json": {
+    "before": "994d6442943768f4da5efb16a729f5643e9f6c4c1ae73500e9e5c6205b995ce6",
+    "after": "994d6442943768f4da5efb16a729f5643e9f6c4c1ae73500e9e5c6205b995ce6",
+    "mode": 420
+  },
+  "assets/languages/it.json": {
+    "before": "4fcd14aa0e721c0516cb092f4baada959be396f153eea3c7e760bd8f7dfb0dfb",
+    "after": "4fcd14aa0e721c0516cb092f4baada959be396f153eea3c7e760bd8f7dfb0dfb",
+    "mode": 420
+  },
+  "assets/languages/vi.json": {
+    "before": "1d8b24acc1b18b75664f7c3d2d84f4f7310ecffc2df1dbec7826355fa1223d43",
+    "after": "1d8b24acc1b18b75664f7c3d2d84f4f7310ecffc2df1dbec7826355fa1223d43",
+    "mode": 420
+  },
+  "assets/matugen/config-static.toml": {
+    "before": "2c2350eb8b24f1216b01012be8902e8279c0566d483b20c9471fe7d7b7353d73",
+    "after": "6355f770bc83376723a0fdba09677df6e41bd58825420dfb1b090ae08eb1a0cc",
+    "mode": 420
+  },
+  "assets/matugen/config.toml": {
+    "before": "e90f28317cdeddbc0a05e2e198d5bf53a6d81f1d1d8a6eff14135db0e5528238",
+    "after": "74d8b6c883f742d4da28d2fc2c833637dfbda058384a0e0bb7825b5e801b695a",
+    "mode": 420
+  },
+  "assets/matugen/templates/cava-colors.ini.template": {
+    "before": "75463c192bd7e52d5bd5c7cf40ae21a3dc2908e9c5829d24c475534f1c21d271",
+    "after": "1a8fa054831842fa13b69148c3f7a7a9b76bd848e13fce81407de221add92c1d",
+    "mode": 420
+  },
+  "scripts/wallpaper/matugen_reload.sh": {
+    "before": "65095f2ee2335850525712f3dfbf5bcea9df7b32aacab7e9f7f4ed99b7afe9ef",
+    "after": "65095f2ee2335850525712f3dfbf5bcea9df7b32aacab7e9f7f4ed99b7afe9ef",
+    "mode": 493
+  },
+  "quickshell/reusables/NotificationBox.qml": {
+    "before": "7a73ddee60c9b8eb9e042e9f78584b152df86a131ec1ff0892b382b3148a234a",
+    "after": "7a73ddee60c9b8eb9e042e9f78584b152df86a131ec1ff0892b382b3148a234a",
+    "mode": 420
+  },
+  "quickshell/reusables/qmldir": {
+    "before": "b0031e7dfef95689c39453605e7913d94b2f722e64c97e329e88f22c20102472",
+    "after": "ee17f0fdb8d0f9f62219674e18e22913c08db1817a722514b500d4264c2fde73",
+    "mode": 420
+  },
+  "quickshell/reusables/Dropdown.qml": {
+    "before": "f6c3dd4b5283417783522d1ac1c5d4672143e166c36509bf7bffbbd7fe59eb34",
+    "after": "f6c3dd4b5283417783522d1ac1c5d4672143e166c36509bf7bffbbd7fe59eb34",
+    "mode": 420
+  },
+  "quickshell/reusables/Switch.qml": {
+    "before": "186dc4b27f2545ca5fd35c9e3ad35484b54aaaa3d782505bbbf8f72ec0e6208e",
+    "after": "ffeb8365f085844927b85bd314b966c70646a52e92823fbd38bc2cc7f7896973",
+    "mode": 420
+  },
+  "quickshell/reusables/BackdropClip.qml": {
+    "before": "1dcf11b9d319cd7cbb87b71c4f63f70e4304db9888a05f3de0284e6adb80a1ec",
+    "after": "1dcf11b9d319cd7cbb87b71c4f63f70e4304db9888a05f3de0284e6adb80a1ec",
+    "mode": 420
+  },
+  "quickshell/reusables/Draggable.qml": {
+    "before": "39ca1a1573a755e9c1bad751986d17ac576cdc08c57ad966067394eda2277d71",
+    "after": "39ca1a1573a755e9c1bad751986d17ac576cdc08c57ad966067394eda2277d71",
+    "mode": 420
+  },
+  "quickshell/reusables/DeleteButton.qml": {
+    "before": "47e960da2fb2b07644a68a40d7fd1ddd770e3b63c60a5779c3c7fb6b624d7322",
+    "after": "47e960da2fb2b07644a68a40d7fd1ddd770e3b63c60a5779c3c7fb6b624d7322",
+    "mode": 420
+  },
+  "quickshell/reusables/ClickButton.qml": {
+    "before": "2ed2b42de7fbd02dddc041a58cca28c500145ca4b9ec2bfbd70f0754644724b3",
+    "after": "cfd892892bf3fb5af6d436602857b1f4d73a9fa27215a19b6453341fb1f64142",
+    "mode": 420
+  },
+  "quickshell/reusables/Toggle.qml": {
+    "before": "9d95646f632f890f21c6f97a7ddec4d48e9c4a6ea329132fa6024b44acf7fa12",
+    "after": "9d95646f632f890f21c6f97a7ddec4d48e9c4a6ea329132fa6024b44acf7fa12",
+    "mode": 420
+  },
+  "quickshell/reusables/PasswordInput.qml": {
+    "before": "ad5716bc2f16697a337b7afd8d4cd6c12020f9d0b902f877be15d318dcba7e97",
+    "after": "ad5716bc2f16697a337b7afd8d4cd6c12020f9d0b902f877be15d318dcba7e97",
+    "mode": 420
+  },
+  "quickshell/reusables/IconButton.qml": {
+    "before": "f7a58f9cca8aa50e50b6e0d8c61f9cff1ce4f6a932d3b350a2b461024adac329",
+    "after": "bac0e7bc191372e9fafad41b3aae619963fcaaf49011535668cf2a030ffee1db",
+    "mode": 420
+  },
+  "quickshell/reusables/FillButton.qml": {
+    "before": "e21551b93b1e507001c5b971e0d51ed18b71415dc7734a9fadefca58f7533258",
+    "after": "7703ca76d52eb541b3c917a33bb36697ffdbc4e08e2b18b2717458d2acf36bc7",
+    "mode": 420
+  },
+  "quickshell/reusables/CenteredIcon.qml": {
+    "before": null,
+    "after": "c1c8f66ee97943788e8ed004c91da1e806cae1a15f31ef0dfcde70a04ea9b2d4",
+    "mode": 420
+  },
+  "quickshell/reusables/AmbientBackdrop.qml": {
+    "before": "bda344d97299346281ff5075ebafe97f17fd5fed525cb8484305b5ef220b2e4f",
+    "after": "bda344d97299346281ff5075ebafe97f17fd5fed525cb8484305b5ef220b2e4f",
+    "mode": 420
+  },
+  "quickshell/reusables/Input.qml": {
+    "before": "83c4aed509e01766d6271429f76ec77931a053cad1d3917ab2d2a744f75a96e3",
+    "after": "83c4aed509e01766d6271429f76ec77931a053cad1d3917ab2d2a744f75a96e3",
+    "mode": 420
+  },
+  "quickshell/syspanel/SystemPanel.qml": {
+    "before": "d8796769198e417d43332b488f37c9b30a364a0aa5f78274e9d6f2a3f33829a6",
+    "after": "a98e080d63f559f6f1b9d8b879b3347079f4605a3b70d81d7e738d79896e9fa0",
+    "mode": 420
+  },
+  "quickshell/clipboard/Clipboard.qml": {
+    "before": "42ed3d2306e9a0150a4865db0d3d5c9406ac2b6975c0dff8e0c038eba7ef117e",
+    "after": "42ed3d2306e9a0150a4865db0d3d5c9406ac2b6975c0dff8e0c038eba7ef117e",
+    "mode": 420
+  },
+  "quickshell/launcher/Launcher.qml": {
+    "before": "1a86d3b179b0845313840bad6516a9d484beb6424f4c32657b92bd72c471a4f8",
+    "after": "bf479f24daca864f34e9cec02a3a404d3be1d59bdb813af850a74a0037aed6c3",
+    "mode": 420
+  },
+  "quickshell/media/MusicPopup.qml": {
+    "before": "f00b46784299a1a0ac02ec5a73e88e7b4cc1077faf8ea957039825578b513a3c",
+    "after": "f00b46784299a1a0ac02ec5a73e88e7b4cc1077faf8ea957039825578b513a3c",
+    "mode": 420
+  },
+  "quickshell/guide/GuidePopup.qml": {
+    "before": "f3f088a4b0d813c49d865ce3d08fb215ecdc344cb54871099fde0b94a079d35c",
+    "after": "261974d9804f1182ba6b56413792185e9b9bf2da73aab0e188e07a62d6fe7395",
+    "mode": 420
+  },
+  "quickshell/guide/DockTab.qml": {
+    "before": "04135dcc1bb6c535e21407c2fa4bec968b91652c8998d9b4c8887cb1692dcd1c",
+    "after": "04135dcc1bb6c535e21407c2fa4bec968b91652c8998d9b4c8887cb1692dcd1c",
+    "mode": 420
+  },
+  "quickshell/widgets/WidgetRegistry.qml": {
+    "before": "c1b36f0fd13261bb84153ca7d53352f8140a308fbd8301cb161ecc805cb72020",
+    "after": "c1b36f0fd13261bb84153ca7d53352f8140a308fbd8301cb161ecc805cb72020",
+    "mode": 420
+  },
+  "quickshell/network/NetworkPopup.qml": {
+    "before": "102bb817b51fb01694e715215113ab6551da92f1178dcfd5d7a41f289fcdb8d0",
+    "after": "102bb817b51fb01694e715215113ab6551da92f1178dcfd5d7a41f289fcdb8d0",
+    "mode": 420
+  },
+  "quickshell/lock/Lock.qml": {
+    "before": "4af60ccf6b7465446c1b5be20cf286af8969906b265b8b674d61b9ae9f5fd452",
+    "after": "e231f143ff69fcac7c8c7ad4c7771201cf5daa1046f37862a6152ba676d348fd",
+    "mode": 420
+  },
+  "quickshell/bar/Bar.qml": {
+    "before": "78c7c09255748c3bb88610c89c159f0033070a48773e5ad45cabe0635484f269",
+    "after": "78c7c09255748c3bb88610c89c159f0033070a48773e5ad45cabe0635484f269",
+    "mode": 420
+  },
+  "quickshell/bar/TopBar.qml": {
+    "before": "e3d1b6e543de6a0c594d29f065e42e28243c64d6f3e07fededabccaa23f15db0",
+    "after": "e3d1b6e543de6a0c594d29f065e42e28243c64d6f3e07fededabccaa23f15db0",
+    "mode": 420
+  },
+  "quickshell/screenshot/ScreenshotOverlay.qml": {
+    "before": "b87b8b7dd2959b574c7b5d0504e4f2c8bd140cc49ee6c2fecaf7c82faa0c3d41",
+    "after": "b87b8b7dd2959b574c7b5d0504e4f2c8bd140cc49ee6c2fecaf7c82faa0c3d41",
+    "mode": 420
+  },
+  "quickshell/volume/VolumePopup.qml": {
+    "before": "bf28b73e58ae29b55a27d4ff7b7a907032da1567e3e34521111214fbab332848",
+    "after": "bf28b73e58ae29b55a27d4ff7b7a907032da1567e3e34521111214fbab332848",
+    "mode": 420
+  },
+  "quickshell/wallpaper/WallpaperPicker.qml": {
+    "before": "40a62da00115297d0c9290fc254d46382b5d4fa3cd1d58bccc96c1f3b1da8e05",
+    "after": "48be5b0e4a308b2318c4371d1f815b2f33ba9c5097a6632c62bce8a4081e0692",
+    "mode": 420
+  },
+  "quickshell/wallpaper/WallpaperEngine.qml": {
+    "before": "22a042d2ebd4cc6ca02c228e6d8264717b6af577013efc852ad3641680f3b53e",
+    "after": "22a042d2ebd4cc6ca02c228e6d8264717b6af577013efc852ad3641680f3b53e",
+    "mode": 420
+  },
+  "quickshell/notifications/types/Screenshot.qml": {
+    "before": "97ef231a6882af65f27e9e48f8bd9e4a4af0494de546d46326caae7081860784",
+    "after": "97ef231a6882af65f27e9e48f8bd9e4a4af0494de546d46326caae7081860784",
+    "mode": 420
+  },
+  "quickshell/notifications/types/Default.qml": {
+    "before": "ef1a2de92dead9fd40bafaa6f018be37d9ac1cd0260726957b7ea7e3ecf860aa",
+    "after": "ef1a2de92dead9fd40bafaa6f018be37d9ac1cd0260726957b7ea7e3ecf860aa",
+    "mode": 420
+  },
+  "quickshell/guide/bar/BarModulesTab.qml": {
+    "before": "6a34068f228cb657beff3c1505788ae6eb9284a0b45055462eadc62f42921284",
+    "after": "6a34068f228cb657beff3c1505788ae6eb9284a0b45055462eadc62f42921284",
+    "mode": 420
+  },
+  "quickshell/guide/bar/BarSideModulesTab.qml": {
+    "before": "7452211fcf20d577d7fc7b7b6fc9107edecb5e7d399358aae77667947a04983b",
+    "after": "7452211fcf20d577d7fc7b7b6fc9107edecb5e7d399358aae77667947a04983b",
+    "mode": 420
+  },
+  "quickshell/guide/bar/BarGeneralTab.qml": {
+    "before": "68541a134824789d7537ea6bf369b5a6d7eeafa04951c3355298201735bb0d44",
+    "after": "fc3c14f39340929e6e8330c802c7965620ff13bd7bae131e770d92b64e375dbf",
+    "mode": 420
+  },
+  "quickshell/guide/theme/ThemeTab.qml": {
+    "before": "c49a0d47d448da03cb0ca6fca50c103a4319e4d237f2442bdc9b3546ee6275ab",
+    "after": "d057753d7e4a232db380c2ea204a84ac6865a62a31d1a06913062ec34e35a991",
+    "mode": 420
+  },
+  "quickshell/guide/theme/PresetsTab.qml": {
+    "before": "9a6bb41bbeb4c53752a2242029f64392bce7ff7b6a9228a2f48eb063a3958978",
+    "after": "9a6bb41bbeb4c53752a2242029f64392bce7ff7b6a9228a2f48eb063a3958978",
+    "mode": 420
+  },
+  "quickshell/guide/general/GeneralTab.qml": {
+    "before": "de96a473d6820879988e21be697111e79d06bdb8e86359783e24e116d96dbd63",
+    "after": "de96a473d6820879988e21be697111e79d06bdb8e86359783e24e116d96dbd63",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/qmldir": {
+    "before": "98bc7f2ca0fd4847f8b44b4ba35cc57a7cf255ae325714c40f85d2b707d8e2aa",
+    "after": "98bc7f2ca0fd4847f8b44b4ba35cc57a7cf255ae325714c40f85d2b707d8e2aa",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/SideFocusWidget.qml": {
+    "before": "32f01d0fd35052a39d78d7fe8037b9091a87d1d173b538995246a5d4f6a3fc32",
+    "after": "32f01d0fd35052a39d78d7fe8037b9091a87d1d173b538995246a5d4f6a3fc32",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/SideTopWidget.qml": {
+    "before": "cd121e3a18cd18fd24698b406a1b10ce75e44884122579fddf0d8ba6609e8649",
+    "after": "cd121e3a18cd18fd24698b406a1b10ce75e44884122579fddf0d8ba6609e8649",
+    "mode": 420
+  },
+  "quickshell/bar/modules/qmldir": {
+    "before": "2080dd5ec3a3c4667fea76be14ead28a1f0b80a0bd8e46f890bb38030badb12c",
+    "after": "2080dd5ec3a3c4667fea76be14ead28a1f0b80a0bd8e46f890bb38030badb12c",
+    "mode": 420
+  },
+  "quickshell/bar/modules/FocusWidget.qml": {
+    "before": "bd36bd21095a01ac31680e33c715e6e3f17c7c9f9a968d36e00d1cbbb9981c9f",
+    "after": "bd36bd21095a01ac31680e33c715e6e3f17c7c9f9a968d36e00d1cbbb9981c9f",
+    "mode": 420
+  },
+  "quickshell/bar/modules/VisWidget.qml": {
+    "before": "bff5f351826fa5f817f90ad27602a9f000388492a59b6c58a760bf3611d5d0f0",
+    "after": "bff5f351826fa5f817f90ad27602a9f000388492a59b6c58a760bf3611d5d0f0",
+    "mode": 420
+  },
+  "quickshell/bar/modules/LeftWidget.qml": {
+    "before": "ba948d1ce3ee4c6c56116b6a10b9d9ce8c9fc672eea5732038a34b4cfab7b598",
+    "after": "ba948d1ce3ee4c6c56116b6a10b9d9ce8c9fc672eea5732038a34b4cfab7b598",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/timedate/SideTimeDateWidget.qml": {
+    "before": "bc3fae57e60f06443e3f04dea5495fa13559060e706e0f5e9113517e51d90d64",
+    "after": "bc3fae57e60f06443e3f04dea5495fa13559060e706e0f5e9113517e51d90d64",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/workspaces/SideWorkspacesWidget.qml": {
+    "before": "7ac352063407e2f8427db6a57c63ca68166c3b0a8383a5c1adde1e13a7943f94",
+    "after": "7ac352063407e2f8427db6a57c63ca68166c3b0a8383a5c1adde1e13a7943f94",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/timedate/faces/SideBadgeFace.qml": {
+    "before": "277bc739152233e0c1918346f5e2c75962acbfa6dcbfc671c2074ce035bf5273",
+    "after": "277bc739152233e0c1918346f5e2c75962acbfa6dcbfc671c2074ce035bf5273",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/timedate/faces/SideMaterialFace.qml": {
+    "before": "3227d8cf77ff296cd91110f093b7c3f8534b5cfc1dc6dde9663abe288bf8869c",
+    "after": "3227d8cf77ff296cd91110f093b7c3f8534b5cfc1dc6dde9663abe288bf8869c",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/timedate/faces/SideClassicFace.qml": {
+    "before": "beff4c1c9cf8e2de57d5fee715935e2c07e4e73f223cacf5177635ad7771b279",
+    "after": "beff4c1c9cf8e2de57d5fee715935e2c07e4e73f223cacf5177635ad7771b279",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/workspaces/faces/SidePillsFace.qml": {
+    "before": "e7e09170b62bdc435a167915d7f0f5874c87b605445731121cb303ec3fe68d6c",
+    "after": "e7e09170b62bdc435a167915d7f0f5874c87b605445731121cb303ec3fe68d6c",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/workspaces/faces/SidePacmanFace.qml": {
+    "before": "5131fcb51fb78f4fa1318875ca8b798bf0322523d413141f7078a26c706b26ed",
+    "after": "5131fcb51fb78f4fa1318875ca8b798bf0322523d413141f7078a26c706b26ed",
+    "mode": 420
+  },
+  "quickshell/bar/sidemodules/workspaces/faces/SideNumbersFace.qml": {
+    "before": "cfd9aebeafe1443fd7572b89264aff868b8e54baa0cb63beb89b32972e94fb02",
+    "after": "cfd9aebeafe1443fd7572b89264aff868b8e54baa0cb63beb89b32972e94fb02",
+    "mode": 420
+  },
+  "quickshell/bar/modules/system/VolWidget.qml": {
+    "before": "df8db561fca8c906174879190eb8ed1e307decbfdfed25aad66b3e3dc325a2ad",
+    "after": "df8db561fca8c906174879190eb8ed1e307decbfdfed25aad66b3e3dc325a2ad",
+    "mode": 420
+  },
+  "quickshell/bar/modules/system/WifiWidget.qml": {
+    "before": "13135c1bfd39ea57fca8a9c38bffeab585aff9752536f5e7b7d25a8747a5f9e8",
+    "after": "13135c1bfd39ea57fca8a9c38bffeab585aff9752536f5e7b7d25a8747a5f9e8",
+    "mode": 420
+  },
+  "quickshell/bar/modules/system/BatWidget.qml": {
+    "before": "063168b30205d5f5b10564cc87fbc69b4226c4bb60f3554e5744c0d9e20aeaf5",
+    "after": "063168b30205d5f5b10564cc87fbc69b4226c4bb60f3554e5744c0d9e20aeaf5",
+    "mode": 420
+  },
+  "quickshell/bar/modules/system/BtWidget.qml": {
+    "before": "07e0e1432a9da6ecbc540fc67619a9f873015e527857b897981bdf9afed002c7",
+    "after": "07e0e1432a9da6ecbc540fc67619a9f873015e527857b897981bdf9afed002c7",
+    "mode": 420
+  },
+  "quickshell/bar/modules/timedate/TimeDateWidget.qml": {
+    "before": "7fab4d4420d4db8c945697009ca51e253133462382040c6e14d54de8a0b555ce",
+    "after": "7fab4d4420d4db8c945697009ca51e253133462382040c6e14d54de8a0b555ce",
+    "mode": 420
+  },
+  "quickshell/bar/modules/workspaces/WorkspacesWidget.qml": {
+    "before": "fd4975ef1fc8efabee03fca0ef4397b7f71b5f33599ec2a97ff263a46758ddbb",
+    "after": "fd4975ef1fc8efabee03fca0ef4397b7f71b5f33599ec2a97ff263a46758ddbb",
+    "mode": 420
+  },
+  "quickshell/bar/modules/timedate/faces/BadgeFace.qml": {
+    "before": "f7b04d072daa8d24b49a777fe18683260bad1610ade6d6457ef0a744d2c8d177",
+    "after": "f7b04d072daa8d24b49a777fe18683260bad1610ade6d6457ef0a744d2c8d177",
+    "mode": 420
+  },
+  "quickshell/bar/modules/timedate/faces/MaterialFace.qml": {
+    "before": "67937f811599ddb41dcb6db558344a932e9e2f016598e359485a883f73ac7e65",
+    "after": "67937f811599ddb41dcb6db558344a932e9e2f016598e359485a883f73ac7e65",
+    "mode": 420
+  },
+  "quickshell/bar/modules/timedate/faces/ClassicFace.qml": {
+    "before": "67a3e10708025bc6ba8139cedead1ec8a650aedd896e7854559fb20ae398829b",
+    "after": "67a3e10708025bc6ba8139cedead1ec8a650aedd896e7854559fb20ae398829b",
+    "mode": 420
+  },
+  "quickshell/bar/modules/workspaces/faces/PacmanFace.qml": {
+    "before": "76b105fa6c91e3d5c944a2959c6a9481f2419976106b709bf844cb8941b48867",
+    "after": "76b105fa6c91e3d5c944a2959c6a9481f2419976106b709bf844cb8941b48867",
+    "mode": 420
+  },
+  "quickshell/bar/modules/workspaces/faces/NumbersFace.qml": {
+    "before": "e6bb2d762831b08687154bce2bb852288d69a898c1cc95a2b09ec7866313af85",
+    "after": "e6bb2d762831b08687154bce2bb852288d69a898c1cc95a2b09ec7866313af85",
+    "mode": 420
+  },
+  "quickshell/bar/modules/workspaces/faces/PillsFace.qml": {
+    "before": "08b200b0e2304ac991539aa78dc069f7853cfebab72647951b6e57b3696365de",
+    "after": "08b200b0e2304ac991539aa78dc069f7853cfebab72647951b6e57b3696365de",
+    "mode": 420
+  },
+  "quickshell/singletons/system/IconResolver.qml": {
+    "before": "2e29a89571febf56f633d938a8800bd21ae836c61532d6ba6f471647e1ed64b9",
+    "after": "2e29a89571febf56f633d938a8800bd21ae836c61532d6ba6f471647e1ed64b9",
+    "mode": 420
+  },
+  "quickshell/singletons/system/Config.qml": {
+    "before": "c5b487fcce3c1ff5be6e2d3d4e7226d93a08c32578ae4f712b0c381f8ab984ec",
+    "after": "c5b487fcce3c1ff5be6e2d3d4e7226d93a08c32578ae4f712b0c381f8ab984ec",
+    "mode": 420
+  },
+  "quickshell/singletons/theme/ThemeBackend.qml": {
+    "before": "adbdcb57006ee7aa0220b65106ad69e1471d0ca88fc97245d0c74b481e47a77f",
+    "after": "adbdcb57006ee7aa0220b65106ad69e1471d0ca88fc97245d0c74b481e47a77f",
+    "mode": 420
+  },
+  "quickshell/singletons/theme/Wallpaper.qml": {
+    "before": "39f50e546c332d122b9af0fb7411c34301046780bfb36b95ade1bebd88d4f4db",
+    "after": "39f50e546c332d122b9af0fb7411c34301046780bfb36b95ade1bebd88d4f4db",
+    "mode": 420
+  },
+  "quickshell/singletons/theme/Matugen.qml": {
+    "before": "27c9166a02f21a78e7b575f3cdfd617e4e64c2adb4a0a315d70ec0e82b2ecb55",
+    "after": "27c9166a02f21a78e7b575f3cdfd617e4e64c2adb4a0a315d70ec0e82b2ecb55",
+    "mode": 420
+  },
+  "quickshell/quickactions/actions/Dock.qml": {
+    "before": "c43d605f3d7e410aa28c2db3b02df7f890d74ab237b3ca0f6137a43d68f7ab17",
+    "after": "c43d605f3d7e410aa28c2db3b02df7f890d74ab237b3ca0f6137a43d68f7ab17",
+    "mode": 420
+  }
+}

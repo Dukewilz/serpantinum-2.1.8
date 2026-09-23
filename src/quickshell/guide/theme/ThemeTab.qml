@@ -34,10 +34,6 @@ Item {
             "customPath": "",
             "ambientStrength": 100
         },
-        "wallpaperTransition": {
-            "mode": "expressive",
-            "duration": 900
-        },
         "activePreset": "Matugen",
         "matugen": true,
         "colors": {}
@@ -57,8 +53,6 @@ Item {
     }
     property string currentUiCustomPath: themeSettings.uiBackground && themeSettings.uiBackground.customPath !== undefined ? String(themeSettings.uiBackground.customPath) : ""
     property int currentAmbientStrength: themeSettings.uiBackground && themeSettings.uiBackground.ambientStrength !== undefined ? themeSettings.uiBackground.ambientStrength : 100
-    property string currentWallpaperTransitionMode: themeSettings.wallpaperTransition && themeSettings.wallpaperTransition.mode !== undefined ? themeSettings.wallpaperTransition.mode : "expressive"
-    property int currentWallpaperTransitionDuration: themeSettings.wallpaperTransition && themeSettings.wallpaperTransition.duration !== undefined ? themeSettings.wallpaperTransition.duration : 900
     property string currentPreset: themeSettings.activePreset !== undefined ? themeSettings.activePreset : "Matugen"
     property bool useMatugen: themeSettings.matugen !== undefined ? themeSettings.matugen : true
 
@@ -510,9 +504,6 @@ Item {
             themeTabRoot.currentUiSourceMode = uiBg.sourceMode !== undefined ? String(uiBg.sourceMode) : (uiBg.useWallpaper === true ? "current" : "theme");
             themeTabRoot.currentUiCustomPath = uiBg.customPath !== undefined ? String(uiBg.customPath) : "";
             themeTabRoot.currentAmbientStrength = uiBg.ambientStrength !== undefined ? uiBg.ambientStrength : 100;
-            let wallTransition = ts.wallpaperTransition || {};
-            themeTabRoot.currentWallpaperTransitionMode = wallTransition.mode !== undefined ? wallTransition.mode : "expressive";
-            themeTabRoot.currentWallpaperTransitionDuration = wallTransition.duration !== undefined ? wallTransition.duration : 900;
             themeTabRoot.currentPreset = ts.activePreset !== undefined ? ts.activePreset : "Matugen";
             themeTabRoot.useMatugen = ts.matugen !== undefined ? ts.matugen : true;
             themeTabRoot.themeSettings = ts;
@@ -547,10 +538,6 @@ Item {
             "sourceMode": themeTabRoot.currentUiSourceMode,
             "customPath": themeTabRoot.currentUiCustomPath,
             "ambientStrength": themeTabRoot.currentAmbientStrength
-        };
-        current.wallpaperTransition = {
-            "mode": themeTabRoot.currentWallpaperTransitionMode,
-            "duration": Math.max(350, Math.min(1800, Math.round(themeTabRoot.currentWallpaperTransitionDuration)))
         };
         Config.setSetting("theme", current);
         ThemeBackend.updateAppearance();
@@ -1413,83 +1400,7 @@ Item {
                         }
                     }
 
-                    Rectangle {
-                        Layout.fillWidth: true
-                        height: 1
-                        color: Qt.alpha(ThemeBackend.surface2, 0.28)
-                    }
 
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: rootObj.s(6)
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: rootObj.s(1)
-                            Text {
-                                text: "Wallpaper transition"
-                                font.family: ThemeBackend.fontFamily
-                                font.pixelSize: rootObj.s(12)
-                                color: ThemeBackend.text
-                            }
-                        }
-
-                        RowLayout {
-                            Layout.fillWidth: true
-                            spacing: rootObj.s(10)
-                            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-
-                            Switch {
-                                implicitWidth: rootObj.s(200)
-                                implicitHeight: rootObj.s(32)
-                                Layout.alignment: Qt.AlignVCenter
-                                options: ["Expressive", "Fade"]
-                                currentIndex: themeTabRoot.currentWallpaperTransitionMode === "fade" ? 1 : 0
-                                accentColor: ThemeBackend.mauve
-                                baseColor: ThemeBackend.surface0
-                                textColor: ThemeBackend.text
-                                activeTextColor: ThemeBackend.crust
-                                cornerRadius: ThemeBackend.borderRadius
-                                fontPixelSize: rootObj.s(10)
-                                onValueChanged: function(index, value) {
-                                    themeTabRoot.currentWallpaperTransitionMode = index === 1 ? "fade" : "expressive";
-                                    themeTabRoot.updateAppearanceSettings();
-                                }
-                            }
-
-                            ColumnLayout {
-                                spacing: rootObj.s(2)
-                                Layout.alignment: Qt.AlignVCenter
-                                Text {
-                                    text: "Duration"
-                                    font.family: ThemeBackend.fontFamily
-                                    font.pixelSize: rootObj.s(11)
-                                    color: ThemeBackend.subtext0
-                                }
-                                NumberSelector {
-                                    implicitWidth: rootObj.s(140)
-                                    implicitHeight: rootObj.s(32)
-                                    from: 350; to: 1800; stepSize: 50
-                                    suffix: "ms"
-                                    value: themeTabRoot.currentWallpaperTransitionDuration
-                                    accentColor: ThemeBackend.mauve
-                                    baseColor: ThemeBackend.surface0
-                                    buttonColor: ThemeBackend.surface1
-                                    buttonTextColor: ThemeBackend.text
-                                    textColor: ThemeBackend.text
-                                    subTextColor: ThemeBackend.subtext0
-                                    borderColor: Qt.alpha(ThemeBackend.surface2, 0.55)
-                                    cornerRadius: ThemeBackend.borderRadius
-                                    fontFamily: ThemeBackend.fontFamily
-                                    fontPixelSize: rootObj.s(11)
-                                    onValueChanged: function(v) {
-                                        themeTabRoot.currentWallpaperTransitionDuration = Math.round(v);
-                                        appearanceDebounceTimer.restart();
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
 

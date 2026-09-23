@@ -54,10 +54,14 @@ get_setting() {
     local fallback="${2:-}"
     _config_ensure_settings || return 1
     local val
+    # The lock redirection must be created inside the command substitution.
+    # A redirection attached to the assignment itself is applied only after
+    # expansion begins, so `flock 8` otherwise sees an unopened descriptor.
     val="$(
+        exec 8>"${CONFIG_SETTINGS_JSON}.lock"
         flock 8
         jq -r --arg k "$key" 'if has($k) then .[$k] else "__MISSING__" end' "$CONFIG_SETTINGS_JSON" 2>/dev/null
-    )" 8>"${CONFIG_SETTINGS_JSON}.lock" || return 1
+    )" || return 1
     if [[ "$val" == "__MISSING__" || "$val" == "null" ]]; then
         printf '%s' "$fallback"
     else

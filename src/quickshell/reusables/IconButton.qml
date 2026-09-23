@@ -15,19 +15,9 @@ Item {
     property int iconFontSize: 18
     property int iconOffsetX: 0
     property int iconOffsetY: 0
-    // Nerd Font PUA glyphs have asymmetric side bearings. Centering their
-    // implicit text box therefore leaves the visible glyph slightly right of
-    // the button center. Keep a full-size layout box and compensate only the
-    // optical center; callers can still add a deliberate manual offset.
     property bool opticalCentering: true
-    readonly property int automaticIconOffsetX: opticalCentering && buttonIcon.length > 0
-        && buttonIcon.charCodeAt(0) >= 0xE000
-        ? -Math.max(1, Math.round(iconFontSize * 0.055)) : 0
-    readonly property int automaticIconOffsetY: opticalCentering && buttonIcon.length > 0
-        && buttonIcon.charCodeAt(0) >= 0xE000
-        ? -Math.max(0, Math.round(iconFontSize * 0.035)) : 0
 
-    property color accentColor: "#89b4fa"
+    property color accentColor: ThemeBackend.surface0
     property color textColor: "#11111b"
 
     property bool action_highlight: false
@@ -61,21 +51,17 @@ Item {
             NumberAnimation { target: root; property: "popScale"; to: 1.0; duration: 420; easing.type: Easing.OutQuint }
         }
 
-        Item {
-            x: root.iconOffsetX + root.automaticIconOffsetX
-            y: root.iconOffsetY + root.automaticIconOffsetY
-            width: parent.width
-            height: parent.height
-
-            Text {
-                anchors.fill: parent
-                text: root.buttonIcon
-                font.family: "Iosevka Nerd Font"
-                font.pixelSize: root.iconFontSize
-                renderType: Text.NativeRendering
-                color: root.textColor
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+        CenteredIcon {
+            anchors.fill: parent
+            text: root.buttonIcon
+            pixelSize: root.iconFontSize
+            color: root.textColor
+            opticalCentering: root.opticalCentering
+            // Legacy caller offsets were font-bearing workarounds. Measured
+            // centering supersedes them; explicit manual mode remains available.
+            transform: Translate {
+                x: root.opticalCentering ? 0 : root.iconOffsetX
+                y: root.opticalCentering ? 0 : root.iconOffsetY
             }
         }
 

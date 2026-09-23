@@ -42,34 +42,54 @@ PanelWindow {
     property bool isVisible: LauncherController.isVisible
     property int configRevision: 0
     property bool appsLoaded: false
+    property real introItems: 0.0
 
-    Component.onCompleted: {
-        startupPollTimer.restart();
+    function getItemProgress(idx) {
+        if (introItems >= 1.0) return 1.0;
+        if (introItems <= 0.0) return 0.0;
+        let start = Math.min(idx, 10) * 0.04;
+        let p = Math.min(1.0, Math.max(0.0, (introItems - start) / 0.42));
+        if (p <= 0.0) return 0.0;
+        if (p >= 1.0) return 1.0;
+        let c1 = 0.85;
+        let c3 = c1 + 1;
+        return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2);
     }
 
-    // Poll setiap 300ms sampai DesktopEntries benar-benar siap dengan data
-    Timer {
-        id: startupPollTimer
-        interval: 300
-        repeat: true
-        property int attempts: 0
-        onTriggered: {
-            attempts++;
-            let ready = (typeof DesktopEntries !== "undefined")
-                && DesktopEntries.applications
-                && DesktopEntries.applications.values
-                && DesktopEntries.applications.values.length > 0;
+    function getItemOpacity(idx) {
+        if (introItems >= 1.0) return 1.0;
+        if (introItems <= 0.0) return 0.0;
+        let start = Math.min(idx, 10) * 0.04;
+        let p = Math.min(1.0, Math.max(0.0, (introItems - start) / 0.28));
+        return p;
+    }
 
-            if (ready) {
-                startupPollTimer.stop();
-                launcherWindow.loadApps();
-                launcherWindow.executeFilter("");
-                launcherWindow.appsLoaded = true;
-            } else if (attempts >= 30) {
-                // Stop after 9 seconds regardless
-                startupPollTimer.stop();
-            }
+    function restartItemsIntro() {
+        introItems = 0.0;
+        itemsIntroSequence.restart();
+    }
+
+    SequentialAnimation {
+        id: itemsIntroSequence
+        running: false
+        PauseAnimation { duration: 60 }
+        NumberAnimation {
+            target: launcherWindow
+            property: "introItems"
+            from: 0.0
+            to: 1.0
+            duration: 520
+            easing.type: Easing.Linear
         }
+    }
+
+    Component.onCompleted: {
+        if (smartRanking) {
+            rankFetcher.running = true;
+        }
+        loadApps();
+        appsLoaded = true;
+        executeFilter("");
     }
 
     Connections {
@@ -83,6 +103,18 @@ PanelWindow {
     Connections {
         target: (typeof I18n !== "undefined") ? I18n : null
         function onLanguageChanged() {
+            if (launcherWindow.isVisible) {
+                launcherWindow.loadApps();
+                launcherWindow.executeFilter(searchInput.text);
+            } else {
+                launcherWindow.appsLoaded = false;
+            }
+        }
+    }
+
+    Connections {
+        target: (typeof DesktopEntries !== "undefined") ? DesktopEntries : null
+        function onApplicationsChanged() {
             if (launcherWindow.isVisible) {
                 launcherWindow.loadApps();
                 launcherWindow.executeFilter(searchInput.text);
@@ -250,7 +282,7 @@ PanelWindow {
     property real animatedLauncherHeight: targetLauncherHeight
     Behavior on animatedLauncherHeight {
         NumberAnimation {
-            duration: 280
+            duration: 300
             easing.type: Easing.OutCubic
         }
     }
@@ -279,8 +311,11 @@ PanelWindow {
                 try {
                     if (this.text && this.text.trim().length > 0) {
                         launcherWindow.usageRanks = JSON.parse(this.text);
-                        launcherWindow.loadApps();
-                        executeFilter(searchInput.text);
+                        if (!launcherWindow.isVisible || appModel.count === 0) {
+                            launcherWindow.loadApps();
+                            launcherWindow.appsLoaded = true;
+                            launcherWindow.executeFilter(searchInput.text);
+                        }
                     }
                 } catch(e) {}
             }
@@ -334,6 +369,7 @@ PanelWindow {
 
     onIsVisibleChanged: {
         if (isVisible) {
+            restartItemsIntro();
             // Always reload if app list is empty — covers the race condition
             // where DesktopEntries finishes scanning after Component.onCompleted.
             if (!launcherWindow.appsLoaded || launcherWindow.allApps.length === 0) {
@@ -347,8 +383,7 @@ PanelWindow {
             } else {
                 filterDebounceTimer.stop();
             }
-            if (launcherWindow.smartRanking) {
-                rankFetcher.running = false;
+            if (launcherWindow.smartRanking && !rankFetcher.running) {
                 rankFetcher.running = true;
             }
             launcherWindow.grabInputFocus();
@@ -356,12 +391,19 @@ PanelWindow {
             focusRetryTimer.restart();
             focusFinalTimer.restart();
         } else {
+            itemsIntroSequence.stop();
+            introItems = 0.0;
+            launcherWindow.appsLoaded = false;
             appList.resetScroll();
             filterDebounceTimer.stop();
             focusTimer.stop();
             focusRetryTimer.stop();
             focusFinalTimer.stop();
             keyboardNavTimer.stop();
+            if (launcherWindow.smartRanking) {
+                loadApps();
+                executeFilter("");
+            }
         }
     }
 
@@ -515,15 +557,6 @@ PanelWindow {
         return i === sub.length;
     }
 
-    function getItemKey(item) {
-        if (!item) return "";
-        if (item.isCommand) return "cmd:" + item.command;
-        if (item.isCalc) return "calc:" + item.calcResult;
-        if (item.isWidget) return "widget:" + (item.widgetTarget || item.name);
-        if (item.desktop_id) return "app:" + item.desktop_id;
-        return "name:" + item.name;
-    }
-
     function executeFilter(query) {
         launcherWindow.isKeyboardNav = false;
         if (keyboardNavTimer.running) keyboardNavTimer.stop();
@@ -615,7 +648,7 @@ PanelWindow {
             }
 
             if (matches) {
-                let appCopy = {
+                filtered.push({
                     name: app.name,
                     description: app.description,
                     desktop_id: app.desktop_id,
@@ -628,8 +661,7 @@ PanelWindow {
                     calcResult: "",
                     isWidget: app.isWidget || false,
                     widgetTarget: app.widgetTarget || ""
-                };
-                filtered.push(appCopy);
+                });
             }
         }
 
@@ -642,43 +674,33 @@ PanelWindow {
             });
         }
 
-        let targetKeys = {};
-        for (let i = 0; i < filtered.length; i++) {
-            targetKeys[getItemKey(filtered[i])] = true;
+        let minCount = Math.min(appModel.count, filtered.length);
+        for (let i = 0; i < minCount; i++) {
+            let cur = appModel.get(i);
+            let target = filtered[i];
+            if (cur.name !== target.name
+                || cur.desktop_id !== target.desktop_id
+                || cur.description !== target.description
+                || cur.icon !== target.icon
+                || cur.fontIcon !== target.fontIcon
+                || cur.score !== target.score
+                || cur.command !== target.command
+                || cur.calcResult !== target.calcResult
+                || cur.isCommand !== target.isCommand
+                || cur.isCalc !== target.isCalc
+                || cur.isWidget !== target.isWidget
+                || cur.widgetTarget !== target.widgetTarget) {
+                appModel.set(i, target);
+            }
         }
 
-        for (let i = appModel.count - 1; i >= 0; i--) {
-            let key = getItemKey(appModel.get(i));
-            if (!targetKeys[key]) {
+        if (appModel.count > filtered.length) {
+            for (let i = appModel.count - 1; i >= filtered.length; i--) {
                 appModel.remove(i);
             }
-        }
-
-        for (let i = 0; i < filtered.length; i++) {
-            let target = filtered[i];
-            let targetKey = getItemKey(target);
-
-            let curIndex = -1;
-            for (let j = i; j < appModel.count; j++) {
-                if (getItemKey(appModel.get(j)) === targetKey) {
-                    curIndex = j;
-                    break;
-                }
-            }
-
-            if (curIndex === i) {
-                let cur = appModel.get(i);
-                if (cur.name !== target.name || cur.desktop_id !== target.desktop_id || cur.description !== target.description || cur.icon !== target.icon || cur.fontIcon !== target.fontIcon || cur.command !== target.command || cur.calcResult !== target.calcResult || cur.isCommand !== target.isCommand || cur.isCalc !== target.isCalc || cur.isWidget !== target.isWidget) {
-                    appModel.set(i, target);
-                }
-            } else if (curIndex > i) {
-                appModel.move(curIndex, i, 1);
-                let cur = appModel.get(i);
-                if (cur.name !== target.name || cur.desktop_id !== target.desktop_id || cur.description !== target.description || cur.icon !== target.icon || cur.fontIcon !== target.fontIcon || cur.command !== target.command || cur.calcResult !== target.calcResult || cur.isCommand !== target.isCommand || cur.isCalc !== target.isCalc || cur.isWidget !== target.isWidget) {
-                    appModel.set(i, target);
-                }
-            } else {
-                appModel.insert(i, target);
+        } else if (appModel.count < filtered.length) {
+            for (let i = appModel.count; i < filtered.length; i++) {
+                appModel.append(filtered[i]);
             }
         }
 
@@ -1050,7 +1072,7 @@ PanelWindow {
             anchors.fill: parent
             radius: container.dynamicCornerRadius
             color: ThemeBackend.uiBackgroundUseWallpaper ? Qt.alpha(ThemeBackend.base, 0.22) : Qt.alpha(ThemeBackend.base, ThemeBackend.uiBackgroundOpacity)
-            border.width: launcherWindow.isCentered ? 1 : 0
+            border.width: 0
             border.color: launcherWindow.isCentered ? Qt.alpha(ThemeBackend.surface2, 0.6) : "transparent"
             clip: true
 
@@ -1212,62 +1234,6 @@ PanelWindow {
                              ? Math.max(0.0, Math.min(1.0, (container.animProgress - 0.2) / 0.8))
                              : 1.0
 
-                    Transition {
-                        id: listAddTrans
-                        NumberAnimation {
-                            property: "opacity"
-                            from: 0.0
-                            to: 1.0
-                            duration: 220
-                            easing.type: Easing.OutCubic
-                        }
-                        NumberAnimation {
-                            property: "scale"
-                            from: 0.94
-                            to: 1.0
-                            duration: 250
-                            easing.type: Easing.OutBack
-                            easing.overshoot: 1.1
-                        }
-                    }
-
-                    Transition {
-                        id: listRemoveTrans
-                        NumberAnimation {
-                            property: "opacity"
-                            to: 0.0
-                            duration: 150
-                            easing.type: Easing.OutCubic
-                        }
-                        NumberAnimation {
-                            property: "scale"
-                            to: 0.92
-                            duration: 150
-                            easing.type: Easing.OutCubic
-                        }
-                    }
-
-                    Transition {
-                        id: listDisplacedTrans
-                        NumberAnimation {
-                            property: "y"
-                            duration: 300
-                            easing.type: Easing.OutCubic
-                        }
-                        NumberAnimation {
-                            property: "opacity"
-                            to: 1.0
-                            duration: 200
-                            easing.type: Easing.OutCubic
-                        }
-                        NumberAnimation {
-                            property: "scale"
-                            to: 1.0
-                            duration: 200
-                            easing.type: Easing.OutCubic
-                        }
-                    }
-
                     NumberAnimation {
                         id: scrollAnim
                         target: appList
@@ -1288,23 +1254,13 @@ PanelWindow {
 
                         highlightFollowsCurrentItem: false
 
-                        property bool transitionsEnabled: launcherWindow.isVisible && container.animProgress > 0.7
-
-                        add: transitionsEnabled ? listAddTrans : null
-                        remove: transitionsEnabled ? listRemoveTrans : null
-                        move: transitionsEnabled ? listDisplacedTrans : null
-                        displaced: transitionsEnabled ? listDisplacedTrans : null
-
                         function getItemY(idx) {
                             return idx * (launcherWindow.s(44) + spacing);
                         }
 
                         function resetScroll() {
                             scrollAnim.stop();
-                            if (contentY > 0) {
-                                positionViewAtBeginning();
-                                contentY = 0;
-                            }
+                            contentY = 0;
                         }
 
                         onContentYChanged: {
@@ -1321,8 +1277,8 @@ PanelWindow {
                             let itemBottom = itemTop + itemH;
 
                             let curContentY = scrollAnim.running ? scrollAnim.to : contentY;
-                            let totalH = appModel.count * step - spacing;
-                            let maxScroll = Math.max(0, Math.max(totalH, contentHeight) - height);
+                            let totalH = Math.max(0, appModel.count * step - spacing);
+                            let maxScroll = Math.max(0, totalH - height);
                             let newContentY = curContentY;
 
                             if (itemTop < curContentY) {
@@ -1334,7 +1290,7 @@ PanelWindow {
                             newContentY = Math.max(0, Math.min(maxScroll, newContentY));
 
                             if (Math.abs(newContentY - contentY) > 0.5) {
-                                if (animated && transitionsEnabled) {
+                                if (animated) {
                                     scrollAnim.stop();
                                     scrollAnim.from = contentY;
                                     scrollAnim.to = newContentY;
@@ -1357,8 +1313,11 @@ PanelWindow {
                             parent: appList.contentItem
                             z: 0
                             visible: opacity > 0.001
-                            opacity: (appList.count > 0 && appList.currentIndex >= 0 && appList.currentItem !== null) ? 1.0 : 0.0
+                            opacity: (appList.count > 0 && appList.currentIndex >= 0)
+                                     ? launcherWindow.getItemOpacity(appList.currentIndex)
+                                     : 0.0
                             Behavior on opacity {
+                                enabled: !itemsIntroSequence.running
                                 NumberAnimation {
                                     duration: 170
                                     easing.type: Easing.OutCubic
@@ -1370,10 +1329,17 @@ PanelWindow {
                             radius: ThemeBackend.borderRadius
                             color: ThemeBackend.mauve
 
-                            property real targetY: (appList.currentIndex >= 0) ? appList.getItemY(appList.currentIndex) : 0
+                            property real targetY: (appList.currentIndex >= 0 && appModel.count > 0)
+                                                   ? appList.getItemY(appList.currentIndex)
+                                                   : 0
                             y: targetY
 
+                            transform: Translate {
+                                x: launcherWindow.s(-20) * (1.0 - launcherWindow.getItemProgress(appList.currentIndex))
+                            }
+
                             Behavior on y {
+                                enabled: launcherWindow.isKeyboardNav
                                 NumberAnimation {
                                     duration: 320
                                     easing.type: Easing.OutQuint
@@ -1385,10 +1351,15 @@ PanelWindow {
                             id: delegateRoot
                             width: ListView.view ? ListView.view.width : 0
                             height: launcherWindow.s(44)
-                            clip: true
+                            clip: false
                             z: 1
 
                             property bool isSelected: index === appList.currentIndex
+
+                            opacity: launcherWindow.getItemOpacity(index)
+                            transform: Translate {
+                                x: launcherWindow.s(-20) * (1.0 - launcherWindow.getItemProgress(index))
+                            }
 
                             Item {
                                 id: delegateContent
@@ -1453,6 +1424,7 @@ PanelWindow {
                                                 id: delegateIcon
                                                 anchors.fill: parent
                                                 property bool failedLoad: false
+                                                cache: false
 
                                                 visible: (!model.fontIcon || model.fontIcon === "") && source !== "" && status === Image.Ready && !failedLoad
 
@@ -1461,7 +1433,17 @@ PanelWindow {
                                                     let ic = launcherWindow.desktopIconFor(model.desktop_id || "", model.icon || "");
                                                     if (!ic) return "";
                                                     if (ic.startsWith("file://") || ic.startsWith("image://") || ic.startsWith("http://") || ic.startsWith("https://")) return ic;
-                                                    return ic.startsWith("/") ? "file://" + ic : "image://icon/" + ic;
+                                                    if (ic.startsWith("/")) return "file://" + ic;
+
+                                                    let baseName = ic.replace(/\.(png|svg|xpm|ico)$/i, "");
+                                                    if (typeof Quickshell !== "undefined" && typeof Quickshell.iconPath === "function") {
+                                                        let resolved = Quickshell.iconPath(ic) || Quickshell.iconPath(baseName);
+                                                        if (resolved && resolved.length > 0) {
+                                                            return resolved.startsWith("/") ? ("file://" + resolved) : resolved;
+                                                        }
+                                                    }
+
+                                                    return "image://icon/" + baseName;
                                                 }
 
                                                 sourceSize: Qt.size(64, 64)
@@ -1543,6 +1525,7 @@ PanelWindow {
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
+                                        launcherWindow.isKeyboardNav = false;
                                         appList.currentIndex = index;
                                         activateIndex(index);
                                     }

@@ -77,17 +77,14 @@ Item {
             anchors.rightMargin: root.contentAlignment === Qt.AlignRight ? root.horizontalPadding : 0
             spacing: 12
 
-            Text {
+            CenteredIcon {
                 id: iconText
                 visible: root.buttonIcon !== ""
                 text: root.buttonIcon
-                font.family: "Iosevka Nerd Font"
-                font.pixelSize: root.iconFontSize
+                pixelSize: root.iconFontSize
                 Layout.minimumWidth: root.iconFontSize
                 Layout.preferredWidth: root.iconFontSize
                 Layout.minimumHeight: root.iconFontSize
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
                 color: bRoot.contentTextColor
                 Behavior on color { ColorAnimation { duration: 150 } }
 

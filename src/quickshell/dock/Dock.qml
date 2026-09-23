@@ -5,6 +5,7 @@ import QtQuick.Shapes
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
+import Quickshell.Io
 import "../"
 import "../reusables"
 
@@ -84,6 +85,7 @@ Variants {
                     "opacity": 100,
                     "exclusive": false,
                     "autohide": false,
+                    "smartAutohide": true,
                     "autohideTimeout": 1000,
                     "editing": false,
                     "apps": [],
@@ -161,7 +163,213 @@ Variants {
                     return Boolean(val);
                 }
 
-                readonly property bool isEffectivelyExclusive: dockWindow.initialized && dockEnabled && dockExclusive && !autohide && !isFullscreenActive && !editMode && (dockAppsModel.count > 0)
+                property bool smartAutohide: {
+                    let val = undefined;
+                    if (rawDockSettings && rawDockSettings.smartAutohide !== undefined) {
+                        val = rawDockSettings.smartAutohide;
+                    } else if (typeof Config !== "undefined" && Config.rawSettings && Config.rawSettings["dock.smartAutohide"] !== undefined) {
+                        val = Config.rawSettings["dock.smartAutohide"];
+                    }
+                    if (val === undefined || val === null) return true;
+                    if (typeof val === "boolean") return val;
+                    if (typeof val === "string") return val.toLowerCase() === "true" || val === "1";
+                    return Boolean(val);
+                }
+
+                property bool isNiri: false
+                property bool isSway: false
+                property int niriActiveIndex: 0
+                property var niriOccupiedMap: ({})
+                property int swayActiveIndex: 0
+                property var swayOccupiedMap: ({})
+
+                property int activeIndex: {
+                    let idx = -1;
+                    if (isNiri) {
+                        idx = niriActiveIndex;
+                    } else if (isSway) {
+                        idx = swayActiveIndex;
+                    } else if (typeof Hyprland !== "undefined") {
+                        const fw = Hyprland.focusedWorkspace;
+                        if (!fw) return -1;
+                        idx = fw.id - 1;
+                    }
+                    return idx >= 0 ? idx : -1;
+                }
+
+                readonly property bool isWorkspaceBusy: {
+                    if (isNiri) {
+                        return !!niriOccupiedMap[activeIndex];
+                    }
+                    if (isSway) {
+                        return !!swayOccupiedMap[activeIndex];
+                    }
+                    if (typeof Hyprland !== "undefined") {
+                        let ws = null;
+                        if (dockWindow.screen && Hyprland.monitors && Hyprland.monitors.values) {
+                            let mon = Hyprland.monitors.values.find(m => m.name === dockWindow.screen.name);
+                            if (mon && mon.activeWorkspace) {
+                                ws = mon.activeWorkspace;
+                            }
+                        }
+                        if (!ws && Hyprland.focusedWorkspace) {
+                            ws = Hyprland.focusedWorkspace;
+                        }
+                        if (!ws && activeIndex >= 0 && Hyprland.workspaces && Hyprland.workspaces.values) {
+                            ws = Hyprland.workspaces.values.find(w => w.id === activeIndex + 1) ?? null;
+                        }
+                        if (ws) {
+                            if (ws.toplevels && ws.toplevels.values) {
+                                return ws.toplevels.values.length > 0;
+                            }
+                            if (ws.windows !== undefined) {
+                                return ws.windows > 0;
+                            }
+                        }
+                    }
+                    return false;
+                }
+
+                property bool autohide: rawDockSettings.autohide !== undefined ? rawDockSettings.autohide : false
+                readonly property bool effectiveAutohide: smartAutohide ? isWorkspaceBusy : autohide
+
+                onEffectiveAutohideChanged: hideTimer.stop()
+                onActiveIndexChanged: hideTimer.stop()
+
+                Timer {
+                    id: niriDebounceTimer
+                    interval: 50
+                    repeat: false
+                    onTriggered: {
+                        if (dockWindow.isNiri) {
+                            niriPoller.running = false;
+                            niriPoller.running = true;
+                        }
+                    }
+                }
+
+                Timer {
+                    id: niriRestartTimer
+                    interval: 1000
+                    repeat: false
+                    onTriggered: {
+                        if (dockWindow.isNiri) {
+                            niriEventStream.running = false;
+                            niriEventStream.running = true;
+                        }
+                    }
+                }
+
+                Process {
+                    id: niriEventStream
+                    running: false
+                    command: ["niri", "msg", "--json", "event-stream"]
+                    stdout: SplitParser {
+                        splitMarker: "\n"
+                        onRead: data => {
+                            if (data.trim().length > 0) {
+                                niriDebounceTimer.restart();
+                            }
+                        }
+                    }
+                    onExited: {
+                        if (dockWindow.isNiri) {
+                            niriRestartTimer.restart();
+                        }
+                    }
+                }
+
+                Process {
+                    id: niriPoller
+                    running: false
+                    command: [
+                        "bash",
+                        "-c",
+                        "workspaces=$(niri msg -j workspaces 2>/dev/null || echo '[]'); windows=$(niri msg -j windows 2>/dev/null || echo '[]'); echo \"{\\\"workspaces\\\": $workspaces, \\\"windows\\\": $windows}\""
+                    ]
+                    stdout: StdioCollector {
+                        onStreamFinished: {
+                            try {
+                                let data = JSON.parse(this.text);
+                                let wsList = data.workspaces || [];
+                                let winList = data.windows || [];
+                                let occ = {};
+                                for (let i = 0; i < winList.length; i++) {
+                                    let win = winList[i];
+                                    if (win.workspace_id !== undefined && win.workspace_id !== null) {
+                                        occ[win.workspace_id] = true;
+                                    }
+                                }
+                                let activeIdx = 0;
+                                for (let j = 0; j < wsList.length; j++) {
+                                    let w = wsList[j];
+                                    let idx = (w.idx !== undefined ? w.idx : (w.id !== undefined ? w.id : 1)) - 1;
+                                    if (w.is_focused || w.is_active) {
+                                        activeIdx = idx;
+                                    }
+                                    if (w.active_window_id !== null || occ[w.id] || occ[w.idx]) {
+                                        occ[idx] = true;
+                                    }
+                                }
+                                dockWindow.niriActiveIndex = activeIdx;
+                                dockWindow.niriOccupiedMap = occ;
+                            } catch (e) {}
+                        }
+                    }
+                }
+
+                Process {
+                    id: swayPoller
+                    running: false
+                    command: [
+                        "bash",
+                        "-c",
+                        "swaymsg -t get_workspaces -r 2>/dev/null || echo '[]'"
+                    ]
+                    stdout: StdioCollector {
+                        onStreamFinished: {
+                            try {
+                                let wsList = JSON.parse(this.text) || [];
+                                let occ = {};
+                                let activeIdx = 0;
+                                for (let i = 0; i < wsList.length; i++) {
+                                    let w = wsList[i];
+                                    let num = (w.num !== undefined && w.num > 0) ? w.num : parseInt(w.name);
+                                    let idx = (!isNaN(num) && num > 0) ? num - 1 : i;
+                                    if (w.focused) {
+                                        activeIdx = idx;
+                                    }
+                                    occ[idx] = true;
+                                }
+                                dockWindow.swayActiveIndex = activeIdx;
+                                dockWindow.swayOccupiedMap = occ;
+                            } catch (e) {}
+
+                            swayWaiter.running = false;
+                            if (dockWindow.isSway) {
+                                swayWaiter.running = true;
+                            }
+                        }
+                    }
+                }
+
+                Process {
+                    id: swayWaiter
+                    running: false
+                    command: [
+                        "bash",
+                        "-c",
+                        "swaymsg -t subscribe -m '[\"workspace\", \"window\"]' 2>/dev/null | grep -m 1 -E '\"change\"'"
+                    ]
+                    onExited: {
+                        swayPoller.running = false;
+                        if (dockWindow.isSway) {
+                            swayPoller.running = true;
+                        }
+                    }
+                }
+
+                readonly property bool isEffectivelyExclusive: dockWindow.initialized && dockEnabled && dockExclusive && !effectiveAutohide && !isFullscreenActive && !editMode && (dockAppsModel.count > 0)
                 readonly property int dockReservedSpace: Math.round(dockContainer.fullThickness + effectiveMargin)
 
                 property real dockHoverScaleMultiplier: {
@@ -263,7 +471,7 @@ Variants {
                     enabled: dockWindow.initialized && !dockWindow.positionChanging
                     NumberAnimation { duration: 280; easing.type: Easing.OutCubic }
                 }
-                property bool autohide: rawDockSettings.autohide !== undefined ? rawDockSettings.autohide : false
+
                 property int autohideTimeout: rawDockSettings.autohideTimeout !== undefined ? rawDockSettings.autohideTimeout : 1000
                 property real autohideHitSize: s(18)
                 property bool editMode: rawDockSettings.editing !== undefined ? rawDockSettings.editing : false
@@ -372,7 +580,7 @@ Variants {
                 }
 
                 function checkHideTimer() {
-                    if (!dockHover.hovered && !edgeHover.hovered && dockWindow.autohide && !dockWindow.editMode) {
+                    if (!dockHover.hovered && !edgeHover.hovered && dockWindow.effectiveAutohide && !dockWindow.editMode) {
                         hideTimer.restart();
                     } else {
                         hideTimer.stop();
@@ -387,7 +595,7 @@ Variants {
                 property bool isRevealed: {
                     if (isFullscreenActive) return false;
                     if (editMode) return true;
-                    if (!autohide) return true;
+                    if (!effectiveAutohide) return true;
                     if (dockHover.hovered) return true;
                     if (edgeHover.hovered) return true;
                     if (hideTimer.running) return true;
@@ -445,6 +653,7 @@ Variants {
                     current.enableScrolling = enableScrolling;
                     current.exclusive = dockExclusive;
                     current.onTop = dockOnTop;
+                    current.smartAutohide = smartAutohide;
                     if (typeof Config !== "undefined" && typeof Config.setSetting === "function") {
                         Config.setSetting("dock", current);
                     }
@@ -490,6 +699,7 @@ Variants {
                     current.enableScrolling = enableScrolling;
                     current.exclusive = dockExclusive;
                     current.onTop = dockOnTop;
+                    current.smartAutohide = smartAutohide;
                     if (typeof Config !== "undefined" && typeof Config.setSetting === "function") {
                         Config.setSetting("dock", current);
                     }
@@ -600,6 +810,16 @@ Variants {
                 }
 
                 Component.onCompleted: {
+                    let de = (typeof SystemInfo !== "undefined" && SystemInfo.desktopEnv) ? SystemInfo.desktopEnv.toLowerCase() : "";
+                    dockWindow.isNiri = de.indexOf("niri") !== -1;
+                    dockWindow.isSway = de.indexOf("sway") !== -1;
+                    if (dockWindow.isNiri) {
+                        niriPoller.running = true;
+                        niriEventStream.running = true;
+                    }
+                    if (dockWindow.isSway) {
+                        swayPoller.running = true;
+                    }
                     loadApps();
                     loadAllDesktopApps();
                     initTimer.start();
@@ -649,7 +869,7 @@ Variants {
 
                 Item {
                     id: edgeTrigger
-                    visible: dockWindow.autohide && !dockWindow.isFullscreenActive && !dockWindow.editMode
+                    visible: dockWindow.effectiveAutohide && !dockWindow.isFullscreenActive && !dockWindow.editMode
                     x: {
                         if (dockWindow.isVertical) {
                             if (dockWindow.dockPosition === "right") {
@@ -1359,7 +1579,9 @@ Variants {
 
                                         property real targetOffsetY: {
                                             if (dockWindow.isVertical) {
-                                                return animSpread;
+                                                if (dockWindow.dockPosition === "top") return animLift;
+                                                if (dockWindow.dockPosition === "bottom") return -animLift;
+                                                return 0.0;
                                             } else {
                                                 if (dockWindow.dockPosition === "bottom") return -animLift;
                                                 if (dockWindow.dockPosition === "top") return animLift;

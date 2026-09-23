@@ -89,17 +89,13 @@ Item {
                 implicitHeight: root.iconFontSize + 4
                 Layout.alignment: Qt.AlignVCenter
 
-                Text {
-                    id: iconLabel
-                    anchors.centerIn: parent
+                CenteredIcon {
+                    anchors.fill: parent
                     text: root.buttonIcon
-                    font.family: "Iosevka Nerd Font"
-                    font.pixelSize: root.iconFontSize
+                    pixelSize: root.iconFontSize
                     color: root.textColor
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    transform: Translate { x: root.iconOffsetX; y: root.iconOffsetY }
                 }
+
             }
 
             ColumnLayout {

@@ -114,45 +114,39 @@ Item {
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
 
-                    readonly property bool hasIcon: optionItem.modelData.length > 0 && optionItem.modelData.charCodeAt(0) >= 0xE000
-                    readonly property string iconPart: hasIcon ? optionItem.modelData.charAt(0) : ""
-                    readonly property string textPart: hasIcon ? optionItem.modelData.slice(1).trim() : optionItem.modelData
-
-                    Row {
-                        anchors.centerIn: parent
-                        height: parent.height
+                    // codePointAt keeps supplementary-plane Nerd glyphs intact.
+                    readonly property int firstCodePoint: modelData.length ? modelData.codePointAt(0) : 0
+                    readonly property bool hasIcon: (firstCodePoint >= 0xE000 && firstCodePoint <= 0xF8FF)
+                        || (firstCodePoint >= 0xF0000 && firstCodePoint <= 0xFFFFD)
+                        || (firstCodePoint >= 0x100000 && firstCodePoint <= 0x10FFFD)
+                    readonly property int iconUnits: firstCodePoint > 0xFFFF ? 2 : 1
+                    readonly property string iconPart: hasIcon ? modelData.slice(0, iconUnits) : ""
+                    readonly property string textPart: hasIcon ? modelData.slice(iconUnits).trim() : modelData
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 4
                         spacing: 6
-
-                        Item {
+                        Item { Layout.fillWidth: true }
+                        CenteredIcon {
                             visible: optionItem.hasIcon
-                            width: visible ? Math.max(root.fontPixelSize + 6, 18) : 0
-                            height: parent.height
-
-                            Text {
-                                anchors.fill: parent
-                                text: optionItem.iconPart
-                                font.family: "Iosevka Nerd Font"
-                                font.pixelSize: root.fontPixelSize
-                                renderType: Text.NativeRendering
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                transform: Translate { x: -Math.max(1, Math.round(root.fontPixelSize * 0.055)) }
-                                color: root.currentIndex === optionItem.index ? root.activeTextColor : root.textColor
-                                Behavior on color { ColorAnimation { duration: 200 } }
-                            }
+                            text: optionItem.iconPart
+                            pixelSize: root.fontPixelSize
+                            Layout.preferredWidth: Math.max(root.fontPixelSize + 6, 18)
+                            Layout.preferredHeight: parent.height
+                            color: root.currentIndex === optionItem.index ? root.activeTextColor : root.textColor
                         }
-
                         Text {
                             visible: optionItem.textPart !== ""
                             text: optionItem.textPart
                             font.family: ThemeBackend.fontFamily
-                            font.weight: Font.Normal
                             font.pixelSize: root.fontPixelSize
-                            renderType: Text.NativeRendering
-                            anchors.verticalCenter: parent.verticalCenter
+                            fontSizeMode: Text.Fit
+                            minimumPixelSize: root.minFontPixelSize
+                            Layout.maximumWidth: Math.max(0, optionItem.width - 8 - (optionItem.hasIcon ? Math.max(root.fontPixelSize + 6, 18) + 6 : 0))
+                            elide: Text.ElideRight
                             color: root.currentIndex === optionItem.index ? root.activeTextColor : root.textColor
-                            Behavior on color { ColorAnimation { duration: 200 } }
                         }
+                        Item { Layout.fillWidth: true }
                     }
 
                     MouseArea {

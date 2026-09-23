@@ -30,28 +30,40 @@ Item {
     property var tutorialSections: []
 
     property var tabsModel: [
-        { id: "Welcome", key: "welcome", name: "Welcome", icon: "󰋜", file: "WelcomeTab.qml" },
-        { id: "General", key: "general", name: "General", icon: "󰒓", file: "general/GeneralTab.qml" },
+        { id: "Welcome", key: "welcome", name: "Welcome", icon: "󰋜", file: "WelcomeTab.qml", iconOffsetX: -1 },
+        { id: "General", key: "general", name: "General", icon: "󰒓", file: "general/GeneralTab.qml", iconOffsetX: -1 },
         { 
             id: "Display", 
             key: "display", 
             name: "Display", 
             icon: "󰃠", 
             file: "display/DisplayMainTab.qml",
+            iconOffsetX: -2,
             subtabs: [
-                { id: "DisplayGeneral", key: "display_general", name: "Display", icon: "󰃠", file: "display/DisplayMainTab.qml" },
-                { id: "DisplayWidgets", key: "display_widgets", name: "Widgets", icon: "󰕰", file: "display/DisplayWidgetsTab.qml" }
+                { id: "DisplayGeneral", key: "display_general", name: "Display", icon: "󰃠", file: "display/DisplayMainTab.qml", iconOffsetX: -2 },
+                { id: "DisplayWidgets", key: "display_widgets", name: "Widgets", icon: "󰕰", file: "display/DisplayWidgetsTab.qml", iconOffsetX: 0 }
             ]
         },
-        { id: "Theme", key: "theme", name: "Theme", icon: "✦", file: "theme/ThemeTab.qml" },
-        { id: "Bar", key: "bar", name: "Bar", icon: "󰹑", file: "BarTab.qml" },
-        { id: "Launcher", key: "launcher", name: "Launcher", icon: "󰵆", file: "LauncherTab.qml" },
-        { id: "Dock", key: "dock", name: "Dock", icon: "󰮯", file: "DockTab.qml" },
-        { id: "On-Screen Display", key: "osd", name: "On-Screen Display", icon: "󰕾", file: "OnScreenDisplayTab.qml" },
-        { id: "Notifications", key: "notifications", name: "Notifications", icon: "󰂚", file: "notifications/NotificationsTab.qml" },
-        { id: "Wellbeing", key: "wellbeing", name: "Wellbeing", icon: "󰄉", file: "wellbeing/DigitalWellbeingTab.qml" },        
-        { id: "Idle", key: "idle", name: "Idle", icon: "󰒲", file: "IdleTab.qml" },
-        { id: "About", key: "about", name: "About", icon: "", file: "AboutTab.qml" }
+        { id: "Theme", key: "theme", name: "Theme", icon: "✦", file: "theme/ThemeTab.qml", iconOffsetX: 0 },
+        { 
+            id: "Bar", 
+            key: "bar", 
+            name: "Bar", 
+            icon: "󰹑", 
+            file: "bar/BarGeneralTab.qml",
+            iconOffsetX: -2,
+            subtabs: [
+                { id: "BarGeneral", key: "bar_general", name: "General", icon: "󰒓", file: "bar/BarGeneralTab.qml", iconOffsetX: -1 },
+                { id: "BarModules", key: "bar_modules", name: "Modules", icon: "󰮯", file: "bar/BarModulesTab.qml", iconOffsetX: -1 }
+            ]
+        },
+        { id: "Launcher", key: "launcher", name: "Launcher", icon: "󰵆", file: "LauncherTab.qml", iconOffsetX: 0 },
+        { id: "Dock", key: "dock", name: "Dock", icon: "󰮯", file: "DockTab.qml", iconOffsetX: 0 },
+        { id: "On-Screen Display", key: "osd", name: "On-Screen Display", icon: "󰕾", file: "OnScreenDisplayTab.qml", iconOffsetX: 0 },
+        { id: "Notifications", key: "notifications", name: "Notifications", icon: "󰂚", file: "notifications/NotificationsTab.qml", iconOffsetX: 0 },
+        { id: "Wellbeing", key: "wellbeing", name: "Wellbeing", icon: "󰄉", file: "wellbeing/DigitalWellbeingTab.qml", iconOffsetX: 0 },        
+        { id: "Idle", key: "idle", name: "Idle", icon: "󰒲", file: "IdleTab.qml", iconOffsetX: -2 },
+        { id: "About", key: "about", name: "About", icon: "", file: "AboutTab.qml", iconOffsetX: 0 }
     ]
 
     StackView.onStatusChanged: {
@@ -458,7 +470,7 @@ Item {
                             color: ThemeBackend.mauve
 
                             property Item activeGroupItem: (root.currentTab >= 0 && root.currentTab < tabsCol.tabItems.length) ? tabsCol.tabItems[root.currentTab] : null
-                            property bool isSubActive: root.currentTab === 2 && root.expandedTab === 2
+                            property bool isSubActive: root.currentTab === root.expandedTab && root.expandedTab !== -1
 
                             property real targetX: isSubActive ? root.s(26) : 0
                             property real targetY: {
@@ -540,7 +552,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: "󰋜"
-                                        iconOffsetX: 0
+                                        iconOffsetX: root.tabsModel[0].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -609,6 +621,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: "󰒓"
+                                        iconOffsetX: root.tabsModel[1].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -690,7 +703,7 @@ Item {
                                             cornerRadius: ThemeBackend.borderRadius
                                             buttonIcon: "󰃠"
                                             iconFontSize: root.s(16)
-                                            iconOffsetX: 0
+                                            iconOffsetX: root.tabsModel[2].iconOffsetX ?? 0
                                             accentColor: ThemeBackend.surface0
                                             textColor: "#ffffff"
                                         }
@@ -809,7 +822,7 @@ Item {
                                                         Layout.alignment: Qt.AlignVCenter
                                                         cornerRadius: ThemeBackend.borderRadius
                                                         buttonIcon: "󰃠"
-                                                        iconOffsetX: 0
+                                                        iconOffsetX: root.tabsModel[2].subtabs[0].iconOffsetX ?? 0
                                                         iconFontSize: root.s(13)
                                                         accentColor: ThemeBackend.surface0
                                                         textColor: "#ffffff"
@@ -873,6 +886,7 @@ Item {
                                                         Layout.alignment: Qt.AlignVCenter
                                                         cornerRadius: ThemeBackend.borderRadius
                                                         buttonIcon: "󰕰"
+                                                        iconOffsetX: root.tabsModel[2].subtabs[1].iconOffsetX ?? 0
                                                         iconFontSize: root.s(13)
                                                         accentColor: ThemeBackend.surface0
                                                         textColor: "#ffffff"
@@ -943,6 +957,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: "✦"
+                                        iconOffsetX: root.tabsModel[3].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -976,71 +991,269 @@ Item {
                                 }
                             }
 
-                            Rectangle {
+                            ColumnLayout {
                                 id: tabBar
                                 Layout.fillWidth: true
-                                Layout.preferredHeight: root.s(44)
-                                implicitHeight: root.s(44)
-                                radius: ThemeBackend.borderRadius
-                                z: 1
+                                spacing: 0
 
                                 opacity: root.getTabOpacity(4)
                                 transform: Translate { x: root.s(-24) * (1.0 - root.getTabProgress(4)) }
 
-                                property bool isDirectActive: root.currentTab === 4
+                                property bool isExpanded: root.expandedTab === 4
+                                property real fullSubtabsHeight: 2 * root.s(36) + root.s(4) + root.s(8)
+                                property real expandProgress: isExpanded ? 1.0 : 0.0
+                                Behavior on expandProgress {
+                                    NumberAnimation { duration: 250; easing.type: Easing.OutCubic }
+                                }
 
-                                color: tabBarMa.containsMouse && !isDirectActive ? Qt.alpha(ThemeBackend.surface1, 0.5) : "transparent"
-                                Behavior on color { ColorAnimation { duration: 150 } }
+                                Rectangle {
+                                    id: tabHeaderBar
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: root.s(44)
+                                    implicitHeight: root.s(44)
+                                    radius: ThemeBackend.borderRadius
+                                    z: 1
 
-                                scale: tabBarMa.pressed ? 0.98 : 1.0
-                                Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
+                                    property bool isDirectActive: root.currentTab === 4 && !tabBar.isExpanded
 
-                                RowLayout {
-                                    anchors.fill: parent
-                                    anchors.leftMargin: root.s(10) + (tabBar.isDirectActive ? root.s(4) : 0)
-                                    anchors.rightMargin: root.s(14)
-                                    spacing: root.s(10)
+                                    color: tabBarMa.containsMouse && !isDirectActive ? Qt.alpha(ThemeBackend.surface1, 0.5) : "transparent"
+                                    Behavior on color { ColorAnimation { duration: 150 } }
 
-                                    Behavior on anchors.leftMargin { NumberAnimation { duration: 400; easing.type: Easing.OutQuint } }
+                                    scale: tabBarMa.pressed ? 0.98 : 1.0
+                                    Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
 
-                                    IconButton {
-                                        enabled: false
-                                        size: root.s(32)
-                                        Layout.preferredWidth: root.s(32)
-                                        Layout.preferredHeight: root.s(32)
-                                        Layout.alignment: Qt.AlignVCenter
-                                        cornerRadius: ThemeBackend.borderRadius
-                                        buttonIcon: "󰹑"
-                                        iconOffsetX: 0
-                                        iconFontSize: root.s(16)
-                                        accentColor: ThemeBackend.surface0
-                                        textColor: "#ffffff"
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        anchors.leftMargin: root.s(10) + (tabHeaderBar.isDirectActive ? root.s(4) : 0)
+                                        anchors.rightMargin: root.s(14)
+                                        spacing: root.s(10)
+
+                                        Behavior on anchors.leftMargin { NumberAnimation { duration: 400; easing.type: Easing.OutQuint } }
+
+                                        IconButton {
+                                            enabled: false
+                                            size: root.s(32)
+                                            Layout.preferredWidth: root.s(32)
+                                            Layout.preferredHeight: root.s(32)
+                                            Layout.alignment: Qt.AlignVCenter
+                                            cornerRadius: ThemeBackend.borderRadius
+                                            buttonIcon: "󰹑"
+                                            iconOffsetX: root.tabsModel[4].iconOffsetX ?? 0
+                                            iconFontSize: root.s(16)
+                                            accentColor: ThemeBackend.surface0
+                                            textColor: "#ffffff"
+                                        }
+
+                                        Text {
+                                            text: I18n.t("guide.tabs.bar", "Bar")
+                                            font.family: ThemeBackend.fontFamily
+                                            font.weight: tabHeaderBar.isDirectActive ? Font.Bold : Font.Medium
+                                            font.pixelSize: root.s(13)
+                                            color: tabHeaderBar.isDirectActive 
+                                                ? ThemeBackend.crust 
+                                                : (tabBarMa.containsMouse ? ThemeBackend.text : ThemeBackend.subtext0)
+                                            Layout.fillWidth: true
+                                            Layout.alignment: Qt.AlignVCenter
+                                            elide: Text.ElideRight
+                                            Behavior on color { ColorAnimation { duration: 150 } }
+                                        }
+
+                                        Text {
+                                            text: "󰅀"
+                                            font.family: ThemeBackend.fontFamily
+                                            font.pixelSize: root.s(14)
+                                            color: tabHeaderBar.isDirectActive 
+                                                ? ThemeBackend.crust 
+                                                : (tabBarMa.containsMouse ? ThemeBackend.text : ThemeBackend.subtext0)
+                                            Layout.alignment: Qt.AlignVCenter
+                                            rotation: tabBar.expandProgress * 180 - 180
+                                            Behavior on rotation { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
+                                            Behavior on color { ColorAnimation { duration: 150 } }
+                                        }
                                     }
 
-                                    Text {
-                                        text: I18n.t("guide.tabs.bar", "Bar")
-                                        font.family: ThemeBackend.fontFamily
-                                        font.weight: tabBar.isDirectActive ? Font.Bold : Font.Medium
-                                        font.pixelSize: root.s(13)
-                                        color: tabBar.isDirectActive 
-                                            ? ThemeBackend.crust 
-                                            : (tabBarMa.containsMouse ? ThemeBackend.text : ThemeBackend.subtext0)
-                                        Layout.fillWidth: true
-                                        Layout.alignment: Qt.AlignVCenter
-                                        elide: Text.ElideRight
-                                        Behavior on color { ColorAnimation { duration: 150 } }
+                                    MouseArea {
+                                        id: tabBarMa
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: {
+                                            if (root.expandedTab === 4) {
+                                                root.expandedTab = -1;
+                                            } else {
+                                                root.expandedTab = 4;
+                                                if (root.currentTab !== 4) {
+                                                    root.currentTab = 4;
+                                                    root.currentSubTab = 0;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 
-                                MouseArea {
-                                    id: tabBarMa
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: {
-                                        root.expandedTab = -1;
-                                        root.currentTab = 4;
-                                        root.currentSubTab = 0;
+                                Item {
+                                    id: barSubtabsWrapper
+                                    visible: tabBar.expandProgress > 0.001
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: tabBar.fullSubtabsHeight * tabBar.expandProgress
+                                    implicitHeight: tabBar.fullSubtabsHeight * tabBar.expandProgress
+                                    opacity: Math.max(0.0, (tabBar.expandProgress - 0.15) / 0.85)
+                                    clip: true
+
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        anchors.topMargin: root.s(4)
+                                        anchors.bottomMargin: root.s(4)
+                                        spacing: root.s(6)
+
+                                        Item {
+                                            Layout.preferredWidth: root.s(20)
+                                            Layout.fillHeight: true
+
+                                            Rectangle {
+                                                anchors.horizontalCenter: parent.horizontalCenter
+                                                anchors.top: parent.top
+                                                anchors.bottom: parent.bottom
+                                                anchors.topMargin: root.s(2)
+                                                anchors.bottomMargin: root.s(2)
+                                                width: Math.max(1, root.s(2))
+                                                radius: root.s(1)
+                                                color: Qt.rgba(ThemeBackend.surface2.r, ThemeBackend.surface2.g, ThemeBackend.surface2.b, 0.7)
+                                            }
+                                        }
+
+                                        ColumnLayout {
+                                            Layout.fillWidth: true
+                                            spacing: root.s(4)
+
+                                            Rectangle {
+                                                id: subtabBarGeneral
+                                                Layout.fillWidth: true
+                                                Layout.preferredHeight: root.s(36)
+                                                implicitHeight: root.s(36)
+                                                radius: ThemeBackend.borderRadius
+                                                z: 1
+
+                                                property bool isSubActive: root.currentTab === 4 && tabBar.isExpanded && root.currentSubTab === 0
+
+                                                color: subtabBarGeneralMa.containsMouse && !isSubActive ? Qt.alpha(ThemeBackend.surface1, 0.5) : "transparent"
+                                                Behavior on color { ColorAnimation { duration: 150 } }
+
+                                                scale: subtabBarGeneralMa.pressed ? 0.98 : 1.0
+                                                Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
+
+                                                RowLayout {
+                                                    anchors.fill: parent
+                                                    anchors.leftMargin: root.s(8) + (subtabBarGeneral.isSubActive ? root.s(4) : 0)
+                                                    anchors.rightMargin: root.s(10)
+                                                    spacing: root.s(8)
+
+                                                    Behavior on anchors.leftMargin { NumberAnimation { duration: 300; easing.type: Easing.OutQuint } }
+
+                                                    IconButton {
+                                                        enabled: false
+                                                        size: root.s(26)
+                                                        Layout.preferredWidth: root.s(26)
+                                                        Layout.preferredHeight: root.s(26)
+                                                        Layout.alignment: Qt.AlignVCenter
+                                                        cornerRadius: ThemeBackend.borderRadius
+                                                        buttonIcon: "󰒓"
+                                                        iconOffsetX: root.tabsModel[4].subtabs[0].iconOffsetX ?? 0
+                                                        iconFontSize: root.s(13)
+                                                        accentColor: ThemeBackend.surface0
+                                                        textColor: "#ffffff"
+                                                    }
+
+                                                    Text {
+                                                        text: I18n.t("guide.tabs.bar_general", "General")
+                                                        font.family: ThemeBackend.fontFamily
+                                                        font.weight: subtabBarGeneral.isSubActive ? Font.Bold : Font.Medium
+                                                        font.pixelSize: root.s(12)
+                                                        color: subtabBarGeneral.isSubActive ? ThemeBackend.crust : ThemeBackend.subtext0
+                                                        Layout.fillWidth: true
+                                                        Layout.alignment: Qt.AlignVCenter
+                                                        elide: Text.ElideRight
+                                                        Behavior on color { ColorAnimation { duration: 150 } }
+                                                    }
+                                                }
+
+                                                MouseArea {
+                                                    id: subtabBarGeneralMa
+                                                    anchors.fill: parent
+                                                    hoverEnabled: true
+                                                    cursorShape: Qt.PointingHandCursor
+                                                    onClicked: {
+                                                        root.currentTab = 4;
+                                                        root.expandedTab = 4;
+                                                        root.currentSubTab = 0;
+                                                    }
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                id: subtabBarModules
+                                                Layout.fillWidth: true
+                                                Layout.preferredHeight: root.s(36)
+                                                implicitHeight: root.s(36)
+                                                radius: ThemeBackend.borderRadius
+                                                z: 1
+
+                                                property bool isSubActive: root.currentTab === 4 && tabBar.isExpanded && root.currentSubTab === 1
+
+                                                color: subtabBarModulesMa.containsMouse && !isSubActive ? Qt.alpha(ThemeBackend.surface1, 0.5) : "transparent"
+                                                Behavior on color { ColorAnimation { duration: 150 } }
+
+                                                scale: subtabBarModulesMa.pressed ? 0.98 : 1.0
+                                                Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
+
+                                                RowLayout {
+                                                    anchors.fill: parent
+                                                    anchors.leftMargin: root.s(8) + (subtabBarModules.isSubActive ? root.s(4) : 0)
+                                                    anchors.rightMargin: root.s(10)
+                                                    spacing: root.s(8)
+
+                                                    Behavior on anchors.leftMargin { NumberAnimation { duration: 300; easing.type: Easing.OutQuint } }
+
+                                                    IconButton {
+                                                        enabled: false
+                                                        size: root.s(26)
+                                                        Layout.preferredWidth: root.s(26)
+                                                        Layout.preferredHeight: root.s(26)
+                                                        Layout.alignment: Qt.AlignVCenter
+                                                        cornerRadius: ThemeBackend.borderRadius
+                                                        buttonIcon: "󰮯"
+                                                        iconOffsetX: root.tabsModel[4].subtabs[1].iconOffsetX ?? 0
+                                                        iconFontSize: root.s(13)
+                                                        accentColor: ThemeBackend.surface0
+                                                        textColor: "#ffffff"
+                                                    }
+
+                                                    Text {
+                                                        text: I18n.t("guide.tabs.bar_modules", "Modules")
+                                                        font.family: ThemeBackend.fontFamily
+                                                        font.weight: subtabBarModules.isSubActive ? Font.Bold : Font.Medium
+                                                        font.pixelSize: root.s(12)
+                                                        color: subtabBarModules.isSubActive ? ThemeBackend.crust : ThemeBackend.subtext0
+                                                        Layout.fillWidth: true
+                                                        Layout.alignment: Qt.AlignVCenter
+                                                        elide: Text.ElideRight
+                                                        Behavior on color { ColorAnimation { duration: 150 } }
+                                                    }
+                                                }
+
+                                                MouseArea {
+                                                    id: subtabBarModulesMa
+                                                    anchors.fill: parent
+                                                    hoverEnabled: true
+                                                    cursorShape: Qt.PointingHandCursor
+                                                    onClicked: {
+                                                        root.currentTab = 4;
+                                                        root.expandedTab = 4;
+                                                        root.currentSubTab = 1;
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -1080,6 +1293,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: "󰵆"
+                                        iconOffsetX: root.tabsModel[5].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -1148,6 +1362,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: "󰮯"
+                                        iconOffsetX: root.tabsModel[6].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -1216,6 +1431,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: "󰕾"
+                                        iconOffsetX: root.tabsModel[7].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -1284,6 +1500,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: "󰂚"
+                                        iconOffsetX: root.tabsModel[8].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -1352,6 +1569,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: "󰄉"
+                                        iconOffsetX: root.tabsModel[9].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -1420,7 +1638,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: "󰒲"
-                                        iconOffsetX: 0
+                                        iconOffsetX: root.tabsModel[10].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -1489,6 +1707,7 @@ Item {
                                         Layout.alignment: Qt.AlignVCenter
                                         cornerRadius: ThemeBackend.borderRadius
                                         buttonIcon: ""
+                                        iconOffsetX: root.tabsModel[11].iconOffsetX ?? 0
                                         iconFontSize: root.s(16)
                                         accentColor: ThemeBackend.surface0
                                         textColor: "#ffffff"
@@ -1614,9 +1833,17 @@ Item {
                                     if (status === Loader.Null && subData.file) {
                                         setSource(subData.file, {
                                             "rootObj": root,
-                                            "tabIndex": tabContentWrapper.parentTabIndex,
-                                            "subTabIndex": subIndex
+                                            "tabIndex": tabContentWrapper.parentTabIndex
                                         });
+                                        if (item && "subTabIndex" in item) {
+                                            item.subTabIndex = subIndex;
+                                        }
+                                    }
+                                }
+
+                                onLoaded: {
+                                    if (item && "subTabIndex" in item) {
+                                        item.subTabIndex = subIndex;
                                     }
                                 }
 

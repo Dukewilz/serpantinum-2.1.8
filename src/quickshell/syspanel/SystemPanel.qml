@@ -29,6 +29,8 @@ Item {
     }
 
     readonly property bool isLeftAnchored: barPosition === "right"
+    readonly property real slideDistance: sidebarPanel.width > 0 ? sidebarPanel.width : root.s(420)
+    readonly property real rowSlideDistance: root.s(36)
 
     readonly property bool isDesktop: UPower.displayDevice.ready ? !UPower.displayDevice.isLaptopBattery : SystemInfo.isDesktop
 
@@ -141,18 +143,20 @@ Item {
 
     property real introContent: 0.0
     property real introTop: 0.0
-    property real introCore: 0.0
     property real introSliders: 0.0
+    property real introQuickActions: 0.0
     property real introNotifs: 0.0
     property real introActions: 0.0
+    property real introCore: 0.0
 
     function resetAndPlayIntro() {
         introContent = 0.0;
         introTop = 0.0;
-        introCore = 0.0;
         introSliders = 0.0;
+        introQuickActions = 0.0;
         introNotifs = 0.0;
         introActions = 0.0;
+        introCore = 0.0;
         closeSequence.stop();
         startupSequence.restart();
     }
@@ -260,36 +264,41 @@ Item {
 
     ParallelAnimation {
         id: startupSequence
-        NumberAnimation { target: root; property: "introContent"; to: 1.0; duration: 280; easing.type: Easing.OutCubic }
+        NumberAnimation { target: root; property: "introContent"; to: 1.0; duration: 320; easing.type: Easing.OutCubic }
         NumberAnimation { target: root; property: "introTop"; from: 0; to: 1.0; duration: 320; easing.type: Easing.OutCubic }
 
         SequentialAnimation {
-            PauseAnimation { duration: 25 }
+            PauseAnimation { duration: 30 }
             NumberAnimation { target: root; property: "introSliders"; from: 0; to: 1.0; duration: 320; easing.type: Easing.OutCubic }
         }
         SequentialAnimation {
-            PauseAnimation { duration: 40 }
-            NumberAnimation { target: root; property: "introNotifs"; from: 0; to: 1.0; duration: 340; easing.type: Easing.OutCubic }
-        }
-        SequentialAnimation {
             PauseAnimation { duration: 55 }
-            NumberAnimation { target: root; property: "introActions"; from: 0; to: 1.0; duration: 340; easing.type: Easing.OutCubic }
+            NumberAnimation { target: root; property: "introQuickActions"; from: 0; to: 1.0; duration: 320; easing.type: Easing.OutCubic }
         }
         SequentialAnimation {
-            PauseAnimation { duration: 70 }
-            NumberAnimation { target: root; property: "introCore"; from: 0; to: 1.0; duration: 360; easing.type: Easing.OutCubic }
+            PauseAnimation { duration: 80 }
+            NumberAnimation { target: root; property: "introNotifs"; from: 0; to: 1.0; duration: 330; easing.type: Easing.OutCubic }
+        }
+        SequentialAnimation {
+            PauseAnimation { duration: 105 }
+            NumberAnimation { target: root; property: "introActions"; from: 0; to: 1.0; duration: 330; easing.type: Easing.OutCubic }
+        }
+        SequentialAnimation {
+            PauseAnimation { duration: 130 }
+            NumberAnimation { target: root; property: "introCore"; from: 0; to: 1.0; duration: 340; easing.type: Easing.OutCubic }
         }
     }
 
     SequentialAnimation {
         id: closeSequence
         ParallelAnimation {
-            NumberAnimation { target: root; property: "introContent"; to: 0.0; duration: 300; easing.type: Easing.OutQuint }
-            NumberAnimation { target: root; property: "introTop"; to: 0.0; duration: 250; easing.type: Easing.OutQuint }
-            NumberAnimation { target: root; property: "introSliders"; to: 0.0; duration: 250; easing.type: Easing.OutQuint }
-            NumberAnimation { target: root; property: "introNotifs"; to: 0.0; duration: 250; easing.type: Easing.OutQuint }
-            NumberAnimation { target: root; property: "introActions"; to: 0.0; duration: 250; easing.type: Easing.OutQuint }
-            NumberAnimation { target: root; property: "introCore"; to: 0.0; duration: 250; easing.type: Easing.OutQuint }
+            NumberAnimation { target: root; property: "introContent"; to: 0.0; duration: 260; easing.type: Easing.InCubic }
+            NumberAnimation { target: root; property: "introTop"; to: 0.0; duration: 220; easing.type: Easing.InCubic }
+            NumberAnimation { target: root; property: "introSliders"; to: 0.0; duration: 220; easing.type: Easing.InCubic }
+            NumberAnimation { target: root; property: "introQuickActions"; to: 0.0; duration: 220; easing.type: Easing.InCubic }
+            NumberAnimation { target: root; property: "introNotifs"; to: 0.0; duration: 220; easing.type: Easing.InCubic }
+            NumberAnimation { target: root; property: "introActions"; to: 0.0; duration: 220; easing.type: Easing.InCubic }
+            NumberAnimation { target: root; property: "introCore"; to: 0.0; duration: 220; easing.type: Easing.InCubic }
         }
         ScriptAction {
             script: {
@@ -395,17 +404,9 @@ Item {
             NumberAnimation { duration: 200; easing.type: Easing.OutQuart }
         }
 
-        Text {
+        CenteredIcon {
             anchors.fill: parent
-            font.family: "Iosevka Nerd Font"
-            font.pixelSize: root.s(22)
-            renderType: Text.NativeRendering
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            transform: Translate {
-                x: -Math.max(1, Math.round(root.s(22) * 0.055))
-                y: -Math.max(0, Math.round(root.s(22) * 0.035))
-            }
+            pixelSize: root.s(22)
             color: qaBtn.isActive ? ThemeBackend.crust : (qaMa.containsMouse ? ThemeBackend.text : ThemeBackend.subtext0)
             text: qaBtn.iconText
             Behavior on color {
@@ -436,7 +437,7 @@ Item {
         border.color: Qt.alpha(ThemeBackend.text, 0.08)
         clip: true
         opacity: root.introContent
-        transform: Translate { x: (root.isLeftAnchored ? -root.s(75) : root.s(75)) * (1.0 - root.introContent) }
+        transform: Translate { x: (root.isLeftAnchored ? -root.slideDistance : root.slideDistance) * (1.0 - root.introContent) }
 
         AmbientBackdrop {
             anchors.fill: parent
@@ -462,7 +463,6 @@ Item {
 
         Item {
             anchors.fill: parent
-            scale: 0.96 + (0.04 * root.introContent)
 
             ColumnLayout {
                 anchors.fill: parent
@@ -476,12 +476,8 @@ Item {
                     Layout.maximumHeight: root.s(54)
                     radius: root.boxRadius
                     color: Qt.darker(ThemeBackend.surface0, 1.04)
-
                     opacity: root.introTop
-                    transform: [
-                        Translate { y: root.s(-20) * (1.0 - root.introTop) },
-                        Scale { origin.x: userBox.width / 2; origin.y: userBox.height / 2; xScale: 0.95 + (0.05 * root.introTop); yScale: 0.95 + (0.05 * root.introTop) }
-                    ]
+                    transform: Translate { x: (root.isLeftAnchored ? -root.rowSlideDistance : root.rowSlideDistance) * (1.0 - root.introTop) }
 
                     RowLayout {
                         anchors.fill: parent
@@ -583,12 +579,8 @@ Item {
                     Layout.maximumHeight: slidersCol.implicitHeight + root.s(20)
                     radius: root.boxRadius
                     color: Qt.darker(ThemeBackend.surface0, 1.04)
-
                     opacity: root.introSliders
-                    transform: [
-                        Translate { y: root.s(20) * (1.0 - root.introSliders) },
-                        Scale { origin.x: slidersBox.width / 2; origin.y: slidersBox.height / 2; xScale: 0.95 + (0.05 * root.introSliders); yScale: 0.95 + (0.05 * root.introSliders) }
-                    ]
+                    transform: Translate { x: (root.isLeftAnchored ? -root.rowSlideDistance : root.rowSlideDistance) * (1.0 - root.introSliders) }
 
                     ColumnLayout {
                         id: slidersCol
@@ -773,12 +765,8 @@ Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: root.s(73)
                     Layout.maximumHeight: root.s(73)
-
-                    opacity: root.introSliders
-                    transform: [
-                        Translate { y: root.s(20) * (1.0 - root.introSliders) },
-                        Scale { origin.x: quickActionsBox.width / 2; origin.y: quickActionsBox.height / 2; xScale: 0.95 + (0.05 * root.introSliders); yScale: 0.95 + (0.05 * root.introSliders) }
-                    ]
+                    opacity: root.introQuickActions
+                    transform: Translate { x: (root.isLeftAnchored ? -root.rowSlideDistance : root.rowSlideDistance) * (1.0 - root.introQuickActions) }
 
                     RowLayout {
                         anchors.fill: parent
@@ -792,7 +780,7 @@ Item {
                             function updateState() {
                                 let anyEnabled = false;
                                 if (typeof BlueLight !== "undefined" && typeof BlueLight.isAnyEnabled === "function") {
-                                    anyEnabled = BlueLight.isAnyEnabled();
+                                anyEnabled = BlueLight.isAnyEnabled();
                                 } else if (typeof Config !== "undefined") {
                                     let ds = Config.getSetting("display", {"monitors": {}});
                                     let mons = (ds && ds.monitors) ? ds.monitors : {};
@@ -980,12 +968,8 @@ Item {
                     cardRadius: root.cardRadius
                     baseColor: Qt.darker(ThemeBackend.surface0, 1.04)
                     rootContext: root
-
                     opacity: root.introNotifs
-                    transform: [
-                        Translate { y: root.s(20) * (1.0 - root.introNotifs) },
-                        Scale { origin.x: notifsBox.width / 2; origin.y: notifsBox.height / 2; xScale: 0.95 + (0.05 * root.introNotifs); yScale: 0.95 + (0.05 * root.introNotifs) }
-                    ]
+                    transform: Translate { x: (root.isLeftAnchored ? -root.rowSlideDistance : root.rowSlideDistance) * (1.0 - root.introNotifs) }
                 }
 
                 RowLayout {
@@ -1018,8 +1002,7 @@ Item {
                             opacity: root.introActions
                             transform: [
                                 Translate { id: shakeTranslate; x: 0 },
-                                Translate { y: root.s(30) * (1.0 - root.introActions) + (index * root.s(12) * (1.0 - root.introActions)) },
-                                Scale { origin.x: actionCapsule.width / 2; origin.y: actionCapsule.height / 2; xScale: 0.90 + (0.10 * root.introActions); yScale: 0.90 + (0.10 * root.introActions) }
+                                Translate { x: (root.isLeftAnchored ? -root.rowSlideDistance : root.rowSlideDistance) * (1.0 - root.introActions) }
                             ]
 
                             color: (actionMa.containsMouse && !isDisabled) ? ThemeBackend.surface1 : Qt.darker(ThemeBackend.surface0, 1.04)
@@ -1282,12 +1265,8 @@ Item {
                     radius: root.isDesktop ? root.s(15) : root.boxRadius
                     color: root.isDesktop ? "transparent" : Qt.darker(ThemeBackend.surface0, 1.04)
                     clip: true
-
                     opacity: root.introCore
-                    transform: [
-                        Translate { y: root.s(15) * (1 - root.introCore) },
-                        Scale { origin.x: batteryBox.width / 2; origin.y: batteryBox.height / 2; xScale: 0.95 + (0.05 * root.introCore); yScale: 0.95 + (0.05 * root.introCore) }
-                    ]
+                    transform: Translate { x: (root.isLeftAnchored ? -root.rowSlideDistance : root.rowSlideDistance) * (1.0 - root.introCore) }
 
                     property real fillLevel: root.animCapacity / 100
                     property real maxWaveAmp: root.isCharging ? root.s(9) : root.s(1.8)
